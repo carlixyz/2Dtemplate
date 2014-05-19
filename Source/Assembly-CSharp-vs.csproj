@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{9A11237F-ED63-616E-DBDE-C39399B84FC5}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Scripts\Custom\AnimSprite.cs" />
+     <Compile Include="Assets\Scripts\Custom\BulletShot.cs" />
+     <Compile Include="Assets\Scripts\Custom\CombineMeshes.cs" />
+     <Compile Include="Assets\Scripts\Custom\CometShoot.cs" />
+     <Compile Include="Assets\Scripts\Custom\FIU.cs" />
+     <Compile Include="Assets\Scripts\Custom\FishBass.cs" />
+     <Compile Include="Assets\Scripts\Custom\FluidLogic.cs" />
+     <Compile Include="Assets\Scripts\Custom\ParticleCleaning.cs" />
+     <Compile Include="Assets\Scripts\Custom\PlatformMove.cs" />
+     <Compile Include="Assets\Scripts\Custom\Portal.cs" />
+     <Compile Include="Assets\Scripts\Custom\SimpleAnim.cs" />
+     <Compile Include="Assets\Scripts\Custom\SimpleAnimUpdated.cs" />
+     <Compile Include="Assets\Scripts\Custom\TatakuaDoor.cs" />
+     <Compile Include="Assets\Scripts\Custom\pickupThing.cs" />
+     <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\Conversation.cs" />
+     <Compile Include="Assets\Scripts\Managers\ConversationManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\DataManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\LevelAttributes.cs" />
+     <Compile Include="Assets\Scripts\Managers\Managers.cs" />
+     <Compile Include="Assets\Scripts\Managers\ScreenManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\ScrollLayer.cs" />
+     <Compile Include="Assets\Scripts\Managers\TileManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\CompletedState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\ControlMenuState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\CreditsState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\GameOverState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\IntroState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\IntroState1.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\MainMenuState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\OptionsState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\PauseState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\SoundMenuState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_Menus\StartState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\DemoAdvise.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\DummyState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\FishingState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\GameState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\HomeState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\InGameState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\InfoMenuState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\TrailerState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\WorldState0.cs" />
+     <Compile Include="Assets\Scripts\camera\CameraBounds.cs" />
+     <Compile Include="Assets\Scripts\camera\CameraScrolling.cs" />
+     <Compile Include="Assets\Scripts\camera\CameraTargetAttributes.cs" />
+     <Compile Include="Assets\Scripts\characters\BatiVampire.cs" />
+     <Compile Include="Assets\Scripts\characters\DengueFly.cs" />
+     <Compile Include="Assets\Scripts\characters\DengueSmart.cs" />
+     <Compile Include="Assets\Scripts\characters\GauchoRunner.cs" />
+     <Compile Include="Assets\Scripts\characters\GauchoShooter.cs" />
+     <Compile Include="Assets\Scripts\characters\MonoShooter.cs" />
+     <Compile Include="Assets\Scripts\characters\MoviePlayer.cs" />
+     <Compile Include="Assets\Scripts\characters\PlayerControls.cs" />
+     <Compile Include="Assets\Scripts\characters\PlayerProperties.cs" />
+     <Compile Include="Assets\Scripts\characters\SpriteChain.cs" />
+     <Compile Include="Assets\Scripts\characters\_Behaviours\BehaviourBase.cs" />
+     <Compile Include="Assets\Scripts\characters\_Behaviours\EntityAI.cs" />
+     <Compile Include="Assets\Scripts\characters\_Behaviours\GauchoSearch.cs" />
+     <Compile Include="Assets\Scripts\characters\_Behaviours\GauchoSleep.cs" />
+     <None Include="Assets\Resources\GUI\Conversations\Iguazu.xml" />
+     <None Include="Assets\Resources\GUI\Conversations\Monte.xml" />
+     <None Include="Assets\Scripts\Shaders\IntroScroll.shader" />
+     <None Include="Assets\Scripts\Shaders\Color Keys.shader" />
+     <None Include="Assets\Resources\GUI\Conversations\ClavelDialogs.xml" />
+     <None Include="Assets\Levels\objecttypes.xml" />
+     <None Include="Assets\Scripts\Shaders\Tinted alpha.shader" />
+     <None Include="Assets\Scripts\Editor\TiledReader.txt" />
+     <None Include="Assets\Scripts\Shaders\Color Key diffuse.shader" />
+     <None Include="Assets\Scripts\Shaders\Triple Scroll.shader" />
+     <None Include="Assets\Resources\GUI\Conversations\Conversation.xml" />
+     <None Include="Assets\Scripts\Shaders\ScrollingLayer.shader" />
+     <None Include="Assets\Scripts\Shaders\Color Key CG.shader" />
+     <None Include="Assets\Resources\GUI\Conversations\Pampero.xml" />
+     <None Include="Assets\Scripts\Shaders\Masked Tint.shader" />
+ <Reference Include="Ionic.Zip">
+ <HintPath>Assets\Scripts\Managers\Ionic.Zip.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

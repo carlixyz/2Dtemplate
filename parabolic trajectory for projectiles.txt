@@ -1,0 +1,115 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DR. PETTERS SYSTEM taken from some game :
+
+		x += dx
+		y += dy * 0.2	// %5 = -6.4
+		dy -= 0.5; 	// this is "The gravity"
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+This is my own revisión with the timeStep added (for the use inside Unity):
+
+	//	NextPosition.x += moveDirection.x * Time.deltaTime; // multiply with speed to go faster
+	//	NextPosition.y += moveDirection.y * Time.deltaTime; // multiply with speed to go faster
+	// 	MoveDirection.y -= 9.8 * Time.deltaTime;
+
+		NextPosition += moveDirection * Time.deltaTime;     // same as above but cleaner
+		moveDirection.y -= 0.5 * gravity  * (Time.maximumDeltaTime * Time.maximumDeltaTime);
+	
+		transform.position = NextPosition; 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+This it's the real formula (a lot more complicated for sure):
+
+var moveDirection : Vector3 = Vector3.zero;
+var StartPosition : Vector3 = Vector3.zero;
+var NextPosition  : Vector3 = Vector3.zero;
+var StartTime     : float	= 0;
+
+function Fire()
+{
+	StartTime = Time.time;
+	
+	moveDirection = Vector3( Mathf.Sign(orientation) * 3, 4, 0);	// Set here the power
+	NextPosition = StartPosition = transform.position;
+   	enemyState = ShooterState.Shooted;
+}
+
+function UpDateShot()
+{
+	var TimeLapse : float = Time.time - StartTime;
+	NextPosition.x = StartPosition.x + (moveDirection.x * TimeLapse) ;
+	NextPosition.y = StartPosition.y + (moveDirection.y * TimeLapse) - (.5 * gravity * (TimeLapse * TimeLapse));
+	transform.position  = NextPosition ; 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Another variation:
+
+var moveDirection : Vector3 = Vector3.zero;
+var StartPosition : Vector3 = Vector3.zero;
+var TimeLapse 	  : float   = 0;
+
+function Fire()
+{
+	moveDirection = Vector3( Mathf.Sign(orientation) * 3, 4, 0);	// Set here the power
+	NextPosition = StartPosition = transform.position;
+   	enemyState = ShooterState.Shooted;
+}
+
+function UpDateShot()
+{
+	TimeLapse  += Time.deltaTime;							// the difference it's time increment
+	transform.position.x = StartPosition.x + (moveDirection.x * TimeLapse) ;
+	transform.position.y = StartPosition.y + (moveDirection.y * TimeLapse) - (.5 * gravity * (TimeLapse * TimeLapse));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Steve Jobs Le dijo "seguí explotando gente en Asia así podrás seguir ganando exorbitantes sumas, y mantené la exclusividad de accesorios y aplicaciones para tener esclavizado al fanatizado usuario que vive feliz con la obsolescencia programada y aun mas feliz con la obsolescencia percibida, por la cual el consumidor tiene el deseo de poseer una cosa un poco más nueva, un poco mejor y un poco antes de que sea necesario con tal de comprar un “estatus”, una imagen, y no un producto".
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Sleeping()
+{
+	if( AnimFlag)
+	{
+		velocity = Vector3.zero;
+		animPlay.PlayFrames(0 , 0, 2, 4, orientation);				// Do zzZZZ Animation
+	
+	
+
+ 	if (  distanceToTarget <= AlertRangeX2 )
+ 	{
+ 		var timertrigger = Time.time + 0.55f;
+ 		var groundPosition = thisTransform.position.y;
+ 		var timer : float;
+
+		while( timertrigger > Time.time )
+		{
+			AnimFlag = false;
+
+			thisTransform.position.y = groundPosition + Mathf.Sin((timertrigger - Time.time) * 5) * .5;
+
+//			thisTransform.position.y = groundPosition + Mathf.Abs(Mathf.Sin(Time.time * 5)) * .5; // modo 1 
+
+//			timer += Time.deltaTime * 5;
+//			thisTransform.position.y = groundPosition + Mathf.Sin( timer ) * .5; // modo 2
+
+//			timer += Time.deltaTime;
+//	 		var lerp = Mathf.PingPong(timer, 1.5) ;
+//	 		thisTransform.position.y = Mathf.Lerp( groundPosition, groundPosition + 0.5, lerp) ;  // modo 3
+	 		
+			animPlay.PlayFrames(1 , 0, 2, orientation); 			// Do Wake up Animation
+			if ( enemyState != ShooterState.Sleeping) {  return;} 
+    		
+    		yield;
+		}
+		thisTransform.position.y = groundPosition;
+		AnimFlag = true;
+ 		enemyState = ShooterState.Alert;
+		return;
+	}
+	}
+}

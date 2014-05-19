@@ -1,0 +1,31 @@
+-> Next Goals:
+ * Add moving platform feature...                           = DONE
+ * Add Player level Spawn reading (a feature too)           = DONE
+ * Add Warp system level like: Input -> A ... Output -> A   = DONE
+ * FlyPlatforms                                             = DONE
+ * Characters Dialog & Conversations                        = DONE
+ * Test ConversationManager y Improve more features         = DONE
+ * Music Loading trough Tiled General Map Property  	    = DONE
+ * Camera Properties configuration by Gral. Map Property too= DONE
+
+ * Edit Items and projectiles TileSets...
+ * Enemy BIG BOSSES IA!:
+			- Teju Yagua 			    = DONE	
+			- Yasi Yatere			    = DONE
+			- SNAKES 			    = DONE
+  			- AO AO				    = DONE
+ * PLAYER SUPER POWERS: 
+	- Caña X1, X2 Increment
+	- Whistler + Fiuuu Shot
+	- Smallability
+
+ * Aditional Extras:
+ + Whistler Fiuuu
+ + Teju Yagua Headless					    = DONE
+ + Arrange Power-Ups + Shots.png
+ + Test Register Save & ReLoad Feature
+ + Clean-Up RainBow
+ + Setup Dengue MiniGame
+ + Setup Mate Puzzle
+ + Setup Pesca MiniGame
+ + Setup General Dialogs Characters
