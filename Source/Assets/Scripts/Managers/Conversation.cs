@@ -23,8 +23,8 @@ private CameraTargetAttributes PlayerCamera;
 
 void  Start ()
 {
-    if (!PlayerRef && Managers.Game.PlayerPrefab)
-        PlayerRef = Managers.Game.PlayerPrefab ;
+		if (!PlayerRef && Managers.Register.Player)
+			PlayerRef = Managers.Register.Player ;
 	if ( PlayerRef != null )
         PlayerCamera = PlayerRef.GetComponent<CameraTargetAttributes>();
 
@@ -50,7 +50,7 @@ void Update()
 
             PlayerCamera.Offset.y = 1;
             //PlayerCamera.Offset.x = (transform.position.x - Managers.Game.PlayerPrefab.transform.position.x) * .5f;
-            PlayerCamera.Offset.x = (transform.position.x - Managers.Game.PlayerPrefab.transform.position.x) * .5f;
+				PlayerCamera.Offset.x = (transform.position.x - Managers.Register.PlayerTransform.position.x) * .5f;
             PlayerCamera.distanceModifier = zoom;
         }
 
@@ -103,8 +103,8 @@ void  OnTriggerEnter (  Collider other   )
     if (other.CompareTag("Player"))
     {
 
-        if (!PlayerRef && Managers.Game.PlayerPrefab)
-            PlayerRef = Managers.Game.PlayerPrefab;
+			if (!PlayerRef && Managers.Register.Player)
+				PlayerRef = Managers.Register.Player;
         if (PlayerRef != null)
             PlayerCamera = PlayerRef.GetComponent<CameraTargetAttributes>();
 

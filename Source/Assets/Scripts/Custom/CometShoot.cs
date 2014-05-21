@@ -27,8 +27,8 @@ namespace BonusObjects
             ActiveSpeed = Random.Range(5, 10);
             
 
-            if (  Managers.Game.PlayerPrefab != null)
-                playerTransform = Managers.Game.PlayerPrefab.transform;
+            if (  Managers.Register.Player != null)
+				playerTransform = Managers.Register.PlayerTransform;
 
             StartCoroutine(CoUpdate());
         }
@@ -54,8 +54,8 @@ namespace BonusObjects
                 }
                 else
                 {
-                    if (Managers.Game.PlayerPrefab != null)
-                        playerTransform = Managers.Game.PlayerPrefab.transform;
+					if (Managers.Register.Player != null)
+						playerTransform = Managers.Register.Player.transform;
                 }
 
                 yield return 0;

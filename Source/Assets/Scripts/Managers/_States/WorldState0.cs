@@ -35,7 +35,7 @@ public class WorldState0 : InGameState
     {
         //Debug.Log("Called Pampero Resume!");
 
-        if (Managers.Game.PlayerPrefab && !Managers.Game.IsPlaying)
+		if (Managers.Register.Player && !Managers.Game.IsPlaying)
         {
             Managers.Tiled.Load(Managers.Register.Stage1);
 

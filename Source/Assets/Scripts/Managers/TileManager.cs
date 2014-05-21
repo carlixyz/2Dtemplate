@@ -23,116 +23,107 @@ using Ionic.Zlib;
  * because they are Camera's childs, but the depth property is still working (just with a diferent output)
  * */
 
-public class TileManager : MonoBehaviour {
+public class TileManager : MonoBehaviour 
+{
 
-    private uint FlippedHorizontallyFlag    = 0x80000000;
-    private uint FlippedVerticallyFlag      = 0x40000000;
-    private uint FlippedDiagonallyFlag      = 0x20000000;
+    uint FlippedHorizontallyFlag    		= 0x80000000;
+    uint FlippedVerticallyFlag      		= 0x40000000;
+    uint FlippedDiagonallyFlag      		= 0x20000000;
 
     public Vector3 TileOutputSize           = new Vector3(1, 1, 0);			        // scrollLayer Poligonal Modulation inside Unity(Plane)
     public Vector2 eps                      = new Vector2(0.000005f, 0.000005f);	// epsilon to fix some Texture bleeding
     public bool CombineMesh                 = true;
 
+    int LastUsedMat = 0;
     List<cTileSet> TileSets = new List<cTileSet>();
-    ScrollLayer[] ScrollLayers;
-    [HideInInspector] public Transform MapTransform;
-    private int LastUsedMat = 0;
 
-    public float ScrollBaseSpeed = 1;
-    public  Transform PlayerTransform;
-    public  Transform CamTransform;
-    private Vector3 oldPos;
-    private Vector3 scrollValue;
+
+
+	public Transform MapTransform;
+    public Transform PlayerTransform;
+    public Transform CamTransform;
+
     //----------------------------------------------------------------------------------------//
 
     public bool Load( string filePath )
     {
         CamTransform = Managers.Display.MainCamera.transform;
         //Debug.Log(Application.dataPath + filePath);
-        if (MapTransform != null )
-        {
-            Debug.LogWarning("To create a new Map Unload previous one first");
-            return false;
-        }
-        
-        if ( !File.Exists(Application.dataPath + filePath) )
-        {
-            Debug.LogWarning("Couldn't Load the TileMap, File Don't Exists!");
-            return false;
-        }
-        
-        string fileName = filePath.Remove(0, filePath.LastIndexOf("/") + 1);			    // quit folder path structure
-        fileName = fileName.Remove(fileName.LastIndexOf("."));							    // quit .tmx or .xml extension
+        if (MapTransform != null) 
+		{
+			Debug.LogWarning ("To create a new Map Unload previous one first");
+			return false;
+		} 
 
-        StreamReader sr = File.OpenText(Application.dataPath + filePath);				    // Do Stream Read
-        XmlDocument Doc = new XmlDocument();
+		if (!File.Exists (Application.dataPath + filePath)) 
+		{
+			Debug.LogWarning ("Couldn't Load the TileMap, File Don't Exists!");
+			return false;
+		} 
+	
+		string fileName = filePath.Remove (0, filePath.LastIndexOf ("/") + 1);			    // quit folder path structure
+		fileName = fileName.Remove (fileName.LastIndexOf ("."));							    // quit .tmx or .xml extension
 
-        Doc.LoadXml(sr.ReadToEnd());                                                        // and Read XML
-        sr.Close();
+		StreamReader sr = File.OpenText (Application.dataPath + filePath);				    // Do Stream Read
+		XmlDocument Doc = new XmlDocument ();
 
-       // CHECK IT'S A TMX FILE FROM TILED	
-        if (Doc.DocumentElement.Name == "map")												// Access root Map		
-        {
-            
-            Managers.Register.currentLevelFile = filePath ;
+		Doc.LoadXml (sr.ReadToEnd ());                                                       // and Read XML
+		sr.Close ();
 
-            GameObject map = new GameObject(fileName);										// inside the editor hierarchy.
-            MapTransform = map.transform;													// take map transform cached
+		// CHECK IT'S A TMX FILE FROM TILED	
+		if (Doc.DocumentElement.Name == "map") 												// Access root Map	
+		{												
+			Managers.Register.currentLevelFile = filePath;
+			MapTransform = new GameObject (fileName).transform;								// Create inside the editor hierarchy & take map transform cached
 
-            Managers.Display.cameraScroll.ResetBounds(new Rect(0, 0,	// Set Level bounds for camera 
-                                            int.Parse(Doc.DocumentElement.Attributes["width"].Value) * TileOutputSize.x,
-                                            int.Parse(Doc.DocumentElement.Attributes["height"].Value) * TileOutputSize.y));
-
-            
-            // SEEK BITMAP SOURCE FILE	 
-            foreach (XmlNode TileSetInfo in Doc.GetElementsByTagName("tileset"))			// array of the level nodes.
-            {
-                var TileSetRef = new cTileSet(TileSetInfo, filePath);
-                TileSets.Add(TileSetRef);
-            }
-
-            for (XmlNode Layer = Doc.DocumentElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling)
-            {
-                switch(Layer.Name)
-                {
-                    case "layer":                                                           // TagName: TileSet Layers
-                        StartCoroutine(BuildLayer(Layer));
-                        break;
-                    case "imagelayer":                                                      // TagName: Image Layers (for scrolling)
-                        StartCoroutine(BuildScrollLayers(Layer, filePath));
-                        break;
-                    case "objectgroup":                                                     // TagName: Object Group Layer
-                        StartCoroutine(BuildPrefabs(Layer));
-                        break;
-                }
-            }
-
-            SetupScroll();
-        }
-        else
-        {
-            Debug.LogError(fileName + " it's not a Tiled File!, wrong load at: "+ filePath);
-            return false;
-        }
+			Managers.Display.cameraScroll.ResetBounds (new Rect (0, 0,						// Set Level bounds for camera 
+	    		int.Parse (Doc.DocumentElement.Attributes ["width"].Value) * TileOutputSize.x,
+	    		int.Parse (Doc.DocumentElement.Attributes ["height"].Value) * TileOutputSize.y));
 
 
-        if ( Doc.DocumentElement.FirstChild.Name == "properties" )
-            foreach(XmlNode MapProperty in Doc.DocumentElement.FirstChild )
-            {
-                if (MapProperty.Attributes["name"].Value.ToLower() == "music")
-                    Managers.Audio.PlayMusic( (AudioClip)Resources.Load("Sound/" + MapProperty.Attributes["value"].Value, typeof(AudioClip)), .45f, 1);
-                 
-                //if (MapProperty.Attributes["name"].Value.ToLower() == "camerafixedheight")
-                //    Managers.Game.PlayerPrefab.GetComponent<CameraTargetAttributes>().FixedHeight = true;
+			// SEEK BITMAP SOURCE FILE	 
+			foreach (XmlNode TileSetInfo in Doc.GetElementsByTagName("tileset")) 			// array of the level nodes.
+				TileSets.Add(new cTileSet(TileSetInfo, filePath));
 
-                if (MapProperty.Attributes["name"].Value.ToLower() == "zoom")
-                    Managers.Game.PlayerPrefab.GetComponent<CameraTargetAttributes>().distanceModifier = 3.5f;
+	
 
-            }
+			for (XmlNode Layer = Doc.DocumentElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling) 
+			{
+				switch (Layer.Name) 
+				{
+					case "layer":                                                           // TagName: TileSet Layers
+						StartCoroutine (BuildLayer (Layer));
+						break;
+//					case "imagelayer":                                                      // TagName: Image Layers (for scrolling)
+//						StartCoroutine (BuildScrollLayers (Layer, filePath));
+//						break;
+					case "objectgroup":                                                     // TagName: Object Group Layer
+						StartCoroutine (BuildPrefabs (Layer));
+						break;
+				}
+			}
 
-        Debug.Log("Tiled Level Build Finished: "+ fileName);
-        return true;
+
+			if (Doc.DocumentElement.FirstChild.Name == "properties")
+				foreach (XmlNode MapProperty in Doc.DocumentElement.FirstChild) 
+				{
+					if(MapProperty.Attributes ["name"].Value.ToLower () == "music")
+						Managers.Audio.PlayMusic ((AudioClip)Resources.Load ("Sound/" + MapProperty.Attributes ["value"].Value, typeof(AudioClip)), .45f, 1);
+					
+					if(MapProperty.Attributes ["name"].Value.ToLower () == "zoom")
+						Managers.Register.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
+				}
+
+			Managers.Scroll.Init(Doc.GetElementsByTagName("imagelayer"));
+			
+			Debug.Log ("Tiled Level Build Finished: " + fileName);
+			return true;
+		} 
+
+		Debug.LogError (fileName + " it's not a Tiled File!, wrong load at: " + filePath);
+		return false;
     }
+
 
     public void Unload()
     {
@@ -140,23 +131,19 @@ public class TileManager : MonoBehaviour {
 
         if ( MapTransform == null ) 
             return;
-
                 
         if ( PlayerTransform != null )
         {
-            if (Managers.Game.PlayerPrefab)
-                Destroy(Managers.Game.PlayerPrefab);
-
+            if (Managers.Register.Player)
+				Destroy(Managers.Register.Player);
             PlayerTransform = null;
         }
 
         Managers.Audio.StopMusic();
         TileSets.Clear();
         LastUsedMat = 0;
-        ScrollBaseSpeed = 1;
+
         TileOutputSize = new Vector3(1, 1, 0);			         
-        oldPos = Vector3.zero;
-        scrollValue = Vector3.zero;
         CombineMesh = true;
 
         Managers.Display.cameraScroll.ResetBounds();
@@ -167,21 +154,13 @@ public class TileManager : MonoBehaviour {
             MapTransform = null;
         }
 
-        if ( ScrollLayers != null && ScrollLayers.Length > 0)
-            for ( int LayerIndex = ScrollLayers.Length - 1; LayerIndex >= 0 ; LayerIndex-- )
-            {
-                if ( ScrollLayers[LayerIndex] != null )
-                    Destroy(ScrollLayers[LayerIndex].gameObject);
-            }
-        ScrollLayers = null;
-
-        Managers.Register.currentLevelFile = "" ;
-  
+		Managers.Scroll.Deinit ();
+		Managers.Register.currentLevelFile = string.Empty;
     }
+
 
     void OnApplicationQuit() 	
     {
-        // "DeInit()"
         Unload();
     }
 
@@ -212,37 +191,13 @@ public class TileManager : MonoBehaviour {
                         CollisionLayer = 2;                                         // else it's a plane type collsion Layer..
 
                 if (property.GetAttribute("name").ToLower() == "depth")
-                {
-                    LayerTransform.position = new Vector3(  LayerTransform.position.x,
-                                                            LayerTransform.position.y,
-                                                            float.Parse(property.GetAttribute("value")));
-                }
+                    LayerTransform.position = new Vector3( LayerTransform.position.x, LayerTransform.position.y, float.Parse(property.GetAttribute("value")));
 
             }
             Data = (XmlElement)Data.NextSibling;
-
         }
 
-        //while (Data.Name != "data")	//		if ( Data.Name == "properties" )    // if Layer data has properties get them
-        //{
-        //    XmlElement LayerProp = (XmlElement)Data.FirstChild;
-
-        //    if (LayerProp.GetAttribute("name").ToLower() == "collision")
-        //        if (LayerProp.GetAttribute("value").ToLower() != "plane") 
-        //            CollisionLayer = 1;                                         // check if it's a boxed collision and setup
-        //        else 
-        //            CollisionLayer = 2;                                         // else it's a plane type collsion Layer..
-
-        //    if (LayerProp.GetAttribute("name").ToLower() == "depth")
-        //    {
-        //        LayerTransform.position = new Vector3(  LayerTransform.position.x,
-        //                                                LayerTransform.position.y,
-        //                                                float.Parse(LayerProp.GetAttribute("value")));
-        //        //Debug.Log(float.Parse(LayerProp.GetAttribute("value")));
-        //    }
-
-        //    Data = (XmlElement)Data.NextSibling;
-        //}
+		// -- Always use Gzip compression else input here the parser code from google.code SVN Niangapiry --
 
         if ( LayerTransform.position.z == TileOutputSize.z)
             TileOutputSize.z += 0.5f;
@@ -255,16 +210,15 @@ public class TileManager : MonoBehaviour {
             byte[] decodedBytes = Ionic.Zlib.GZipStream.UncompressBuffer(System.Convert.FromBase64String(Data.InnerText));
             for (int tile_index = 0; tile_index < decodedBytes.Length; tile_index += 4)
             {
-                uint global_tile_id = (uint)(decodedBytes[tile_index] | decodedBytes[tile_index + 1] << 8 |
-                                            decodedBytes[tile_index + 2] << 16 | decodedBytes[tile_index + 3] << 24);
+				GameObject TileRef = BuildTile(	  (uint)  (decodedBytes[tile_index]  |
+	                                       		  decodedBytes[tile_index + 1] << 8  |
+			                                      decodedBytes[tile_index + 2] << 16 |
+                                           		  decodedBytes[tile_index + 3] << 24)	); // BuildTile( uint global_tile_id ); // >> Build a Tile with that
+				
 
-
-                GameObject TileRef = BuildTile(global_tile_id);
                 if (TileRef != null)
                 {
-                    TileRef.transform.position = new Vector3(   ColIndex * TileOutputSize.x,
-                                                                RowIndex * TileOutputSize.y,
-                                                                LayerTransform.position.z);
+                    TileRef.transform.position = new Vector3( ColIndex * TileOutputSize.x, RowIndex * TileOutputSize.y, LayerTransform.position.z);
 
                     TileRef.transform.parent = LayerTransform;
 
@@ -281,24 +235,21 @@ public class TileManager : MonoBehaviour {
                 ColIndex = ColIndex % int.Parse(LayerInfo.Attributes["width"].Value);      // ColIndex % TotalColumns 
 
             }//end of each scrollLayer GZIP Compression Info 
-
         }
-
         else Debug.LogError(" Format Error: Save Tiled File in XML style or Compressed mode(Gzip + Base64)");
 
         if (CombineMesh && LastUsedMat == 0)
             Layer.AddComponent<CombineMeshes>();
 
         yield return 0;
-
     }
+
 
     GameObject BuildTile(uint TileId)
     {
         bool Flipped_X = false;
         bool Flipped_Y = false;
         bool Rotated = false;
-        //		bool AddCollision	 = false;
 
         if (TileId != 0)    //	 if ( FirstGid => TileId && TileId <= TotalTiles)	// Si es mayor que 0!				 	 
         {
@@ -355,11 +306,8 @@ public class TileManager : MonoBehaviour {
                     Vector2 vt4 = new Vector2((offset_x - System.Convert.ToByte(Flipped_X)) * TileSets[i].ModuleWidth,
                                              ((offset_y + System.Convert.ToByte(!Flipped_Y)) * TileSets[i].ModuleHeight));
 
-                    int Xsign = 1;
-                    int Ysign = 1;
-
-                    if (Flipped_X) Xsign = -1;
-                    if (Flipped_Y) Ysign = -1;
+					int Xsign = (Flipped_X ? -1 : 1);											// if ( Flipped_X ) Sign = -1;
+					int Ysign = (Flipped_Y ? -1 : 1);
 
                     vt1.x += -eps.x * Xsign;    vt1.y +=  eps.y * Ysign;
                     vt2.x +=  eps.x * Xsign;    vt2.y +=  eps.y * Ysign;
@@ -386,12 +334,10 @@ public class TileManager : MonoBehaviour {
                     m.triangles = new int[6] { 0, 1, 2, 0, 2, 3 };
                     m.RecalculateNormals();
                     m.Optimize();
-
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
                     meshFilter.sharedMesh = m;
                     m.RecalculateBounds();
 
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////
                                             
                     if (TileSets[i].Collisions.ContainsKey(localIndex))                         // If there's a Collision property,
                         switch ((string)(TileSets[i].Collisions[localIndex]).ToLower())                   // Check type and Setup:
@@ -418,20 +364,18 @@ public class TileManager : MonoBehaviour {
                             default:
                                 (Tile.AddComponent("BoxCollider") as BoxCollider).size = Vector3.one;       // or default's Box Collision 
                                 break;
-                        }
+                		}
 
 
-                        return Tile;
-                    }
-                    //break;
-                }
-            
-            }
+        			return Tile;
+				}	//break;
+			}
+    	}
     return null;
     }                                                                                                       // End of BuidTile Function
     //----------------------------------------------------------------------------------------//
 
-    IEnumerator BuildPrefabs(XmlNode ObjectsGroup)
+    public IEnumerator BuildPrefabs(XmlNode ObjectsGroup)
     {
         int height = int.Parse(ObjectsGroup.ParentNode.Attributes["height"].Value);
         int tilewidth = int.Parse(ObjectsGroup.ParentNode.Attributes["tilewidth"].Value);
@@ -484,9 +428,10 @@ public class TileManager : MonoBehaviour {
                 {
                     case "pombero":
                         {
-                            Managers.Game.PlayerPrefab = ObjPrefab;
-                            Managers.Display.cameraScroll.SetTarget( Managers.Game.PlayerPrefab.transform, false );
-                            PlayerTransform = Managers.Game.PlayerPrefab.transform;
+							Managers.Register.Player = ObjPrefab;
+							Managers.Register.PlayerTransform = ObjPrefab.transform;
+							Managers.Display.cameraScroll.SetTarget( Managers.Register.PlayerTransform, false );
+							PlayerTransform = Managers.Register.PlayerTransform;
                             //Debug.Log("setting up position in TileManager");
                             Managers.Register.SetPlayerPos();
 
@@ -616,239 +561,16 @@ public class TileManager : MonoBehaviour {
 
     //----------------------------------------------------------------------------------------//
 
-    #region ScrollManager 
-
-    IEnumerator BuildScrollLayers(XmlNode LayerInfo, string FilePath)
-    {
-        if (!Camera.main)
-            yield break;
-
-        var cam = Camera.main;
-        //float Depth = (TileOutputSize.z - cam.transform.position.z);
-
-
-        //float Depth = TileOutputSize.z ;
-        //TileOutputSize.z += 0.5f;
-
-        //if ( Depth == 0)
-        //    Depth = 1;
-
-
-        float Depth = -120;               //bool AutoDepth = true;
-       
-
-        GameObject scrollLayer = new GameObject(LayerInfo.Attributes["name"].Value);   // Build new scrollLayer inside layer
-
-                // Config Layer position from Tiled file 'Depth' property or else by Layer order by Default
-        scrollLayer.transform.parent = cam.transform;
-        scrollLayer.transform.localScale = Vector3.one;
-
-        // Add magic scroll component
-        var scroll = scrollLayer.AddComponent<ScrollLayer>();
-
-        //if (LayerInfo.LastChild.Name == "properties")
-        //    foreach (XmlNode LayerProp in LayerInfo.LastChild)
-        foreach (XmlNode LayerProp in ((XmlElement)LayerInfo).GetElementsByTagName("property") )
-            {
-                //Debug.Log(LayerProp.Attributes["name"].Value + ": " + LayerProp.Attributes["value"].Value );
-                switch (LayerProp.Attributes["name"].Value.ToLower())
-                {
-                    case "depth":
-                        Depth = float.Parse(LayerProp.Attributes["value"].Value);               // Set scroll Layer depth
-                    //  AutoDepth = false;
-                        break;
-
-                    case "scroll":
-                        scroll.scroll = (LayerProp.Attributes["value"].Value.ToLower() == "auto" ? ScrollType.Auto : ScrollType.Relative);
-                        break;
-
-                    case "size":
-                         if (LayerProp.Attributes["value"].Value.ToLower() == "fullscreen" )
-                             scroll.pixelPerfect = !(scroll.streched = true);                   // Set texture streched 
-                         else if (LayerProp.Attributes["value"].Value.ToLower() == "original")
-                             scroll.pixelPerfect = !(scroll.streched = false);                  // Set texture pixelperfectv
-                         else if (LayerProp.Attributes["value"].Value.ToLower() == "repeatx")
-                             scroll.pixelPerfect = !(scroll.tileY = scroll.streched = false);   // Set pixelperfect tiling X
-                         else if (LayerProp.Attributes["value"].Value.ToLower() == "repeaty")
-                             scroll.pixelPerfect = !(scroll.tileX = scroll.streched = false);   // Set pixelperfect tiling Y
-                         else if (LayerProp.Attributes["value"].Value.ToLower() == "norepeat")
-                             scroll.pixelPerfect = !(scroll.tileX = scroll.tileY = scroll.streched = false);//Set without tile
-                         break;
-
-                    case "speed":
-                        scroll.speed = ReadVector(LayerProp.Attributes["value"].Value, 0);
-                        //Debug.Log("Speed: " +ReadVector(LayerProp.Attributes["value"].Value, 0));
-                        break;
-
-                    case "offset":
-                        scroll.offset = ReadVector(LayerProp.Attributes["value"].Value, 0);
-                        //Debug.Log("offset: " + scroll.offset);
-                        break;
-
-                    case "scale":
-                        scroll.scale = ReadVector(LayerProp.Attributes["value"].Value);
-                        //Debug.Log("scale: " + scroll.scale);
-                        break;
-
-                    case "padding":
-                        scroll.padding = ReadVector(LayerProp.Attributes["value"].Value);
-                        //Debug.Log("padding: " + scroll.padding);
-                        break;
-                    case "heightrange":
-                        scroll.range = ReadVector(LayerProp.Attributes["value"].Value);
-                        //Debug.Log("padding: " + scroll.padding);
-                        break;
-                }
-            }
-        		        
-        // Config Layer position from Tiled file 'Depth' property or else by Layer order by Default
-        //scrollLayer.transform.position =  new Vector3( cam.transform.position.x, cam.transform.position.y, Depth - cam.transform.position.z);
-        
-        if (Depth == -120 )       //if ( AutoDepth)         
-        {
-            Depth = TileOutputSize.z -( System.Convert.ToSingle(TileOutputSize.z == 0) );
-            TileOutputSize.z += 0.5f * System.Convert.ToSingle(TileOutputSize.z != 0);
-        }
-
-        scrollLayer.transform.position =  new Vector3( cam.transform.position.x, cam.transform.position.y, Depth );
-
-
-#if TEXTURE_RESOURCE
-        string AuxPath = LayerInfo.FirstChild.Attributes["source"].Value;
-        Texture2D tex = (Texture2D)Resources.Load( AuxPath.Remove(AuxPath.LastIndexOf(".")+1), typeof(Texture2D) );
-
-#else
-        // Add textures
-        WWW www = new WWW(  "file://" + Application.dataPath + FilePath.Remove(FilePath.LastIndexOf("/") + 1) +
-                            LayerInfo.FirstChild.Attributes["source"].Value);
-        Texture2D tex = www.texture;
-
-#endif
-
-        tex.filterMode = FilterMode.Point;
-        tex.anisoLevel = 0;
-        scroll.SetTexture(tex);
-
-        cam.ResetProjectionMatrix();
-
-        scroll.UpdateLayer();
-
-        ///////////////////////////////////////////////////////////////////////
-
-        //if ( HackSize )
-
-        yield return 0;
-    }
-
-
-    void SetupScroll()
-    {
-        //if (Managers.Game.PlayerPrefab)
-            //PlayerTransform = Managers.Game.PlayerPrefab.transform;
-
-        List<ScrollLayer> scrollList = new List<ScrollLayer>(FindObjectsOfType(typeof(ScrollLayer)) as ScrollLayer[]);
-
-        //if ( scrollList.Count == 0 ) return;
-
-        foreach (ScrollLayer scroll in scrollList)
-        {
-            scroll.SetWeight(Vector3.Distance( Managers.Display.camTransform.position, scroll.transform.position));
-        }
-    #if UNITY_FLASH
-            scrollList.sort(ScrollLayer.Comparision);
-    #else
-            scrollList.Sort();
-    #endif
-            ScrollLayers = scrollList.ToArray();
-
-    }
-
-    void UpdateScroll()
-    {
-        foreach (var scrollLayer in ScrollLayers)
-        {
-            if (!scrollLayer)
-                continue;
-
-            scrollLayer.UpdateLayer(true, false, false);
-        }
-    }
-
-    void LateUpdate()
-    {
-        if ( ScrollLayers == null) return;
-
-        UpdateScroll();
-        //if ( PlayerTransform )
-        //{
-            //scrollValue = PlayerTransform.position - oldPos;
-            //oldPos = PlayerTransform.position;
-
-            scrollValue = CamTransform.position - oldPos;
-            oldPos = CamTransform.position;
-        //}
-
-        foreach (ScrollLayer scrollLayer in ScrollLayers)
-        {
-            if (!scrollLayer)
-                continue;
-
-            //if (PlayerTransform)
-            //    scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > PlayerTransform.position.y &&
-            //        scrollLayer.range.x < PlayerTransform.position.y ) );
-
-            if (PlayerTransform)
-                scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > Managers.Display.MainCamera.transform.position.y &&
-                    scrollLayer.range.x < Managers.Display.MainCamera.transform.position.y ) );
-
-            if (scrollLayer.GetMaterial())
-            {
-                foreach (string textureName in scrollLayer.GetTextureNames())
-                {
-                    if (string.IsNullOrEmpty(textureName)) 
-                        continue;
-
-                    if (scrollLayer.GetMaterial().HasProperty(textureName))
-                    {
-                        scrollLayer.GetMaterial().SetTextureOffset( textureName, WrapVector(
-                            scrollLayer.GetMaterial().GetTextureOffset(textureName) +
-                            //ScrollBaseSpeed * (scrollLayer.GetScrollType() == ScrollType.Auto ?
-                            //                    scrollLayer.GetSpeed() * Time.deltaTime  + 
-                            //                    new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-                            //                        scrollValue.y * scrollLayer.GetSpeed().y)   :
-                            //                    new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-                            //                                scrollValue.y * scrollLayer.GetSpeed().y) )));
-                            ScrollBaseSpeed * (scrollLayer.GetScrollType() == ScrollType.Auto ?
-                                                scrollLayer.GetSpeed() * Time.deltaTime :
-                                                new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-                                                            scrollValue.y * scrollLayer.GetSpeed().y) )));
-                    // So, basically If scrollLayer mode is Auto, update by a deltaTime else it's Relative,
-                    // create a new Vector with the new Player Position multiplied by each axis speed(stay quiet if zero) 
-                    }
-                }
-            }
-        }
-        //if ( PlayerTransform )
-        //    oldPos = PlayerTransform.position;
-    }
-
-    private Vector2 ReadVector(string input, float AxisY = 1) // AxisY sets value for both axis in case of found only 1 value                                                     
-    {                                                                                   // seek float values inside string
-        if (input.Contains(","))                                                        // if there's a comma, separate things
-        {
-            return new Vector2( float.Parse( input.Remove( input.IndexOf(",") )),
-                                float.Parse( input.Remove(0, input.IndexOf(",") + 1) ));
-        }
-                                                                                        // else set just the X Axis 
-        return new Vector2( float.Parse(input), AxisY * float.Parse(input));            // or both if 'AxisY' is enabled    
-    }
-
-    private Vector2 WrapVector(Vector2 input)
-    {
-        return new Vector2(input.x - (int)input.x, input.y - (int)input.y);
-    }
-
-    #endregion
+	private Vector2 ReadVector(string input, float equalAxis = 1) // equalAxis sets value for both axis in case of found only 1 value                                                     
+	{                                                                                   // seek float values inside string
+		if (input.Contains(","))                                                        // if there's a comma, separate things
+		{
+			return new Vector2( float.Parse( input.Remove( input.IndexOf(",") )),
+			                   float.Parse( input.Remove(0, input.IndexOf(",") + 1) ));
+		}
+		// else set just the X Axis 
+		return new Vector2( float.Parse(input), equalAxis * float.Parse(input));            // or both if 'AxisY' is enabled    
+	}
 
     //----------------------------------------------------------------------------------------//
 

@@ -58,9 +58,9 @@ public class HomeState : GameState
         Managers.Display.ShowFlash(.5f);
         Managers.Audio.Play(Doors, Managers.Display.camTransform);
 
-        if (Managers.Game.PlayerPrefab)
+		if (Managers.Register.Player)
         {
-            Managers.Game.PlayerPrefab.GetComponent<PlayerControls>().enabled = false;
+			Managers.Register.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
         }
             //Managers.Game.PlayerPrefab.SetActive(false); 
@@ -94,9 +94,9 @@ public class HomeState : GameState
     {
         //Managers.Game.IsPaused = false;
         //Time.timeScale = 1;
-        if (Managers.Game.PlayerPrefab)
+		if (Managers.Register.Player)
         {
-            Managers.Game.PlayerPrefab.GetComponent<PlayerControls>().enabled = true;
+			Managers.Register.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
         //if (Managers.Game.PlayerPrefab)
@@ -352,7 +352,7 @@ public class HomeState : GameState
                 if (OptionsList.Count < 2)
                     GUI.Label(new Rect((Screen.width * .5f) - 150,
                                      (Screen.height * .5f) - (Background.height * .15f) - 150, 400, 200),
-                                     "Esta pocilga dá pena, está\nalgo vacía y abandonada. \nBuscá Tesoros para mejorar\ntu hogar y Date una vuelta\nde véz en cuando para\nno perderte de alguna\nque otra sorpresa, Suerte!");
+                                     "Esta pocilga dï¿½ pena, estï¿½\nalgo vacï¿½a y abandonada. \nBuscï¿½ Tesoros para mejorar\ntu hogar y Date una vuelta\nde vï¿½z en cuando para\nno perderte de alguna\nque otra sorpresa, Suerte!");
 
 
                 for (int Option = 0; Option < OptionsList.Count; Option++ )
@@ -425,9 +425,9 @@ public class HomeState : GameState
         Managers.Display.ShowFlash(1);
         Managers.Audio.Music.volume = .45f;
 
-        if (Managers.Game.PlayerPrefab)
+		if (Managers.Register.Player)
         {
-            Managers.Game.PlayerPrefab.GetComponent<PlayerControls>().enabled = true;
+			Managers.Register.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
 
@@ -439,7 +439,7 @@ public class HomeState : GameState
         Managers.Audio.Music.volume = .65f;
 
 
-        if (Managers.Game.PlayerPrefab)
+		if (Managers.Register.Player)
         {
             Managers.Game.IsPlaying = true;
 
@@ -463,7 +463,7 @@ public class HomeState : GameState
 
 
             //Managers.Game.IsPlaying = false;
-            Managers.Game.PlayerPrefab.GetComponent<PlayerControls>().enabled = false;
+			Managers.Register.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
  
         }

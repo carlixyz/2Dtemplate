@@ -7,6 +7,7 @@ using System.Collections;
 [RequireComponent(typeof(AudioManager))]
 [RequireComponent(typeof(DataManager))]
 [RequireComponent(typeof(TileManager))]
+[RequireComponent(typeof(ScrollManager))]
 
 public class Managers : MonoBehaviour
 {
@@ -40,6 +41,12 @@ public class Managers : MonoBehaviour
         get { return tileManager; }
     }
 
+	private static ScrollManager scrollManager;
+	public static ScrollManager Scroll
+	{
+		get { return scrollManager; }
+	}
+
     private static ConversationManager conversationManager;
     public static ConversationManager Dialog
     {
@@ -55,6 +62,7 @@ public class Managers : MonoBehaviour
         audioManager = GetComponentInChildren<AudioManager>();
         dataManager = GetComponentInChildren<DataManager>();
         tileManager = GetComponentInChildren<TileManager>();
+        scrollManager = GetComponentInChildren<ScrollManager>();
         conversationManager = GetComponentInChildren<ConversationManager>();
 
  

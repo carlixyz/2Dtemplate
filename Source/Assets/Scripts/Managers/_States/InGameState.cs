@@ -34,7 +34,7 @@ public abstract class InGameState : GameState {
     public override void OnUpdate()
     {
         //if ((Input.GetKeyDown("escape") || Input.GetButtonDown("Start")) && Managers.Game.PlayerPrefab.GetComponent<PlayerControls>().enabled)
-        if ((Input.GetKeyDown("escape") || Input.GetButtonDown("Start")) && !Managers.Game.PlayerPrefab.GetComponent<PlayerProperties>().dead)
+		if ((Input.GetKeyDown("escape") || Input.GetButtonDown("Start")) && !Managers.Register.Player.GetComponent<PlayerProperties>().dead)
             Managers.Game.PushState(typeof(PauseState));
     }
 

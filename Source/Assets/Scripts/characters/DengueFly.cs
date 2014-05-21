@@ -44,8 +44,8 @@ public class DengueFly : MonoBehaviour
     	rigidbody.useGravity = false;
     }
 
-    if (!target && Managers.Game.PlayerPrefab)
-        target = Managers.Game.PlayerPrefab.transform;
+	if (!target && Managers.Register.Player)
+		target = Managers.Register.Player.transform;
         //target =  GameObject.Find("Pombero").transform;			//	We can Use this system to get the player's Id & position
 	
 	if ( target) 
@@ -76,9 +76,9 @@ public class DengueFly : MonoBehaviour
         {
             if (!target)
             {
-                if (Managers.Game.PlayerPrefab)
+				if (Managers.Register.Player)
                 {
-                    target = Managers.Game.PlayerPrefab.transform;
+					target = Managers.Register.PlayerTransform;
                     linkToPlayerControls = (PlayerControls)target.GetComponent<PlayerControls>();
                 }
                 else
@@ -252,7 +252,7 @@ public class DengueFly : MonoBehaviour
 
     //public void Paralize()
     //{
-    //    Debug.Log("Oh my GOD, el pombero está silvando");
+    //    Debug.Log("Oh my GOD, el pombero estï¿½ silvando");
     //    velocity = Vector3.zero;
     //    enemyState = ShooterState.Dead;
     //    //StartCoroutine(Freeze());

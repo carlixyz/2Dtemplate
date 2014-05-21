@@ -121,8 +121,8 @@ namespace CustomAnimations
 
                     case AnimationType.Kurupi:
 
-                        if (Managers.Game.PlayerPrefab != null)
-                            if (Managers.Game.PlayerPrefab.transform.position.x > thisTransform.position.x)
+					if (Managers.Register.Player != null)
+						if (Managers.Register.Player.transform.position.x > thisTransform.position.x)
                                 Orientation = -1;
                             else
                                 Orientation = 1;

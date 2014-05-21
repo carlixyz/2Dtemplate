@@ -25,9 +25,9 @@ namespace Behaviours                            // Some Enemies Behviours
         public override void OnUpdate()
         {
             if (!thisData.target)
-                if (Managers.Game.PlayerPrefab)
+				if (Managers.Register.Player)
                 {
-                    thisData.target = Managers.Game.PlayerPrefab.transform;
+					thisData.target = Managers.Register.PlayerTransform;
                     thisData.linkToPlayerControls = (PlayerControls)thisData.target.GetComponent<PlayerControls>();
                 }
                 else return;

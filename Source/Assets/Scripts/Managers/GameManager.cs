@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     public List<GameState> states = new List<GameState>();
     private bool Running;
 
-    public GameObject PlayerPrefab;
 
 
     void Start()

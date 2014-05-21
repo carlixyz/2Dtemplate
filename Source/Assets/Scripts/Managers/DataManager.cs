@@ -34,6 +34,8 @@ public class DataManager : MonoBehaviour
 	public string previousLevelFile = string.Empty;
     public Dictionary<string, Vector3> MapCheckPoints = new Dictionary<string, Vector3>();
 
+    public GameObject Player;
+	public Transform PlayerTransform;
 
     //public List<int> TopScore = new List<int>();
     //public Dictionary<int, string> TopScorePlayers = new Dictionary<int, string>();
@@ -82,12 +84,11 @@ public class DataManager : MonoBehaviour
 
                                                                                 // If there's a previous saved position use it
         if (MapCheckPoints[currentLevelFile] != Vector3.zero)
-            Managers.Game.PlayerPrefab.transform.position = MapCheckPoints[currentLevelFile];
+			Managers.Register.PlayerTransform.position = MapCheckPoints[currentLevelFile];
         else
-            MapCheckPoints[currentLevelFile] = Managers.Game.PlayerPrefab.transform.position;
+			MapCheckPoints[currentLevelFile] = Managers.Register.PlayerTransform.position;
   
-    }                                           
-
+    }           
 
     public void SoftReset()
     {

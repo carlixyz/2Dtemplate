@@ -211,8 +211,8 @@ public class ConversationManager : MonoBehaviour {
 	
 	public void Update() //: IEnumerator
 	{
-		if (CamTarget == null && Managers.Game.PlayerPrefab)
-			CamTarget = Managers.Game.PlayerPrefab.GetComponent<CameraTargetAttributes>() as CameraTargetAttributes; 
+		if (CamTarget == null && Managers.Register.Player)
+			CamTarget = Managers.Register.Player.GetComponent<CameraTargetAttributes>() as CameraTargetAttributes; 
 		
 		if (IsInConversation())
 		{

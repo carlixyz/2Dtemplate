@@ -339,15 +339,15 @@ public class FishingState : GameState
                         case BonusObjects.Entity.typeId.ItemFire:
                             Managers.Register.FireGauge++;
                             Managers.Register.FireGauge = Mathf.Clamp(Managers.Register.FireGauge, 0, 3);
-                            Managers.Game.PlayerPrefab.renderer.material.SetFloat("_KeyY", 0.25f);
+							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.25f);
                             Managers.Register.Inventory = DataManager.Items.Fire;
                             break;
                         case BonusObjects.Entity.typeId.ItemHat:
-                            Managers.Game.PlayerPrefab.renderer.material.SetFloat("_KeyY", 0.05f);
+							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.05f);
                             Managers.Register.Inventory = DataManager.Items.Hat;
                             break;
                         case BonusObjects.Entity.typeId.ItemWhistler:
-                            Managers.Game.PlayerPrefab.renderer.material.SetFloat("_KeyY", 0.25f);
+							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.25f);
                             Managers.Register.Inventory = DataManager.Items.Whistler;
                             break;
                     }
@@ -394,7 +394,7 @@ public class FishingState : GameState
                 GUI.Box(new Rect((Screen.width * .5f) - 224,
                                  (Screen.height* .5f) - 150,
                                  448, 300),
-                "\n  \n\n\n\nMueve el anzuelo hacía los lados \n para evitar las palometas \n \nCuando enganches un Dorado   \n pulsa varias veces Disparo \n para ascender y atraparlo \n \n \nPresiona Enter/Start para empezar \n¡Buena Suerte! \n");
+                "\n  \n\n\n\nMueve el anzuelo hacï¿½a los lados \n para evitar las palometas \n \nCuando enganches un Dorado   \n pulsa varias veces Disparo \n para ascender y atraparlo \n \n \nPresiona Enter/Start para empezar \nï¿½Buena Suerte! \n");
                 gSkinB.label.fontSize = 24;
                 GUI.color = new Color(1, 0.5f, 0.15f, 1);
                 GUI.Label(new Rect((Screen.width * .5f) - 198,
@@ -422,7 +422,7 @@ public class FishingState : GameState
                         GUI.color = Color.white;
                     else
                         GUI.color = Color.yellow;
-                    GUI.Label(new Rect((Screen.width * .5f) - 132, (Screen.height * .5f), 100, 50), "¿LISTO?");
+                    GUI.Label(new Rect((Screen.width * .5f) - 132, (Screen.height * .5f), 100, 50), "ï¿½LISTO?");
                 }
                 else
                 {
@@ -432,7 +432,7 @@ public class FishingState : GameState
                         GUI.color = Color.white;
                     else
                         GUI.color = Color.clear;
-                    GUI.Label(new Rect((Screen.width * .5f) - 64, (Screen.height * .75f), 100, 50), "¡YA!");
+                    GUI.Label(new Rect((Screen.width * .5f) - 64, (Screen.height * .75f), 100, 50), "ï¿½YA!");
                 }
                 GUI.color = Color.white;
                 
@@ -465,7 +465,7 @@ public class FishingState : GameState
                     "Profundidad: " + (Increment * .1f).ToString("F2") + " m");
                 if (Time.frameCount % 2 == 0)
                     GUI.Label(new Rect((Screen.width * .5f)+56 , (Screen.height * .5f) + 256, 100, 50),
-                    "¡Pulsa Disparo!");
+                    "ï¿½Pulsa Disparo!");
 
                 Back.Render();
 
@@ -521,23 +521,23 @@ public class FishingState : GameState
                     gSkinB.label.fontSize = 14;
                     if ( Deep < 60)
                     GUI.Label(new Rect((Screen.width * .5f) - 250, (Screen.height * .75f), 100, 50),
-                        "Atrapaste un Dorado a " + (Deep * .1f).ToString("F2") + " metros\n" + "                   Recuperaste 30% de Energía extra!");
+                        "Atrapaste un Dorado a " + (Deep * .1f).ToString("F2") + " metros\n" + "                   Recuperaste 30% de Energï¿½a extra!");
                     else
                         GUI.Label(new Rect((Screen.width * .5f) - 250, (Screen.height * .75f), 100, 50),
-                              "Atrapaste un Dorado a " + (Deep * .1f).ToString("F2") + " metros\n" + "                   Recuperaste 100% Energía extra!");
+                              "Atrapaste un Dorado a " + (Deep * .1f).ToString("F2") + " metros\n" + "                   Recuperaste 100% Energï¿½a extra!");
 
                 }
                 else if (Target.myId == BonusObjects.Entity.typeId.Treasure)
                 {
                     gSkinB.label.fontSize = 14;
                     GUI.Label(new Rect((Screen.width * .5f) - 204, (Screen.height * .75f), 100, 50),
-                        "¡Has Encontrado el 3º Tesoro de Iguazú!");
+                        "ï¿½Has Encontrado el 3ï¿½ Tesoro de Iguazï¿½!");
                 }
                 else
                 {
                     gSkinB.label.fontSize = 14;
                     GUI.Label(new Rect((Screen.width * .5f) - 204, (Screen.height * .75f), 100, 50),
-                        "¡Has Encontrado un Item Especial!");
+                        "ï¿½Has Encontrado un Item Especial!");
                 }
                 GUI.color = Color.white;
 
@@ -569,7 +569,7 @@ public class FishingState : GameState
                     GUI.color = Color.red;
                 else
                     GUI.color = Color.white;
-                GUI.Label(new Rect((Screen.width * .5f) - 186, (Screen.height * .5f), 100, 50), "¡SONASTE!");
+                GUI.Label(new Rect((Screen.width * .5f) - 186, (Screen.height * .5f), 100, 50), "ï¿½SONASTE!");
 
                 if ( Increment > 130 )
                 {

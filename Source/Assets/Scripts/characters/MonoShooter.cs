@@ -85,9 +85,9 @@ IEnumerator CoUpdate()	                                                        /
     {
         if (!target)
         {
-            if (Managers.Game.PlayerPrefab)
+			if (Managers.Register.Player)
             {
-                target = Managers.Game.PlayerPrefab.transform;
+				target = Managers.Register.PlayerTransform;
                 linkToPlayerControls = (PlayerControls)target.GetComponent<PlayerControls>();
             }
             else
@@ -386,7 +386,7 @@ void  BeatDown ()
 
 //public void Paralize()
 //{
-//    Debug.Log("Oh my GOD, el pombero está silvando");
+//    Debug.Log("Oh my GOD, el pombero estï¿½ silvando");
 //    velocity = Vector3.zero;
 //    enemyState = ShooterState.Dead;
 //    //StartCoroutine(Freeze());

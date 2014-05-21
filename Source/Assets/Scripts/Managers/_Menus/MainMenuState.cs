@@ -162,11 +162,12 @@ public class MainMenuState : GameState
  
     public override void Pause()
     {
-        //DisplayMenu = false;
+		DeInit ();
     }
 
     public override void Resume()
     {
+		Init ();
         //DisplayMenu = true;
 
 //        Managers.Audio.StopMusic();

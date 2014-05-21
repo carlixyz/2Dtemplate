@@ -65,9 +65,9 @@ private float distanceToTarget = 0;	                    // get dist to target po
                 case EnemyState.StandBy:
                     if (!playerTransform)
                     {
-                        if (Managers.Game.PlayerPrefab)
+						if (Managers.Register.Player)
                         {
-                            playerTransform = Managers.Game.PlayerPrefab.transform;			        //	We can Use this system to get the player's Id & position
+							playerTransform = Managers.Register.Player.transform;			        //	We can Use this system to get the player's Id & position
                             playerControl = playerTransform.GetComponent<PlayerControls>();
                             //playerProps = playerTransform.GetComponent<PlayerProperties>();
                             currentState = EnemyState.Roaming;
@@ -81,12 +81,12 @@ private float distanceToTarget = 0;	                    // get dist to target po
  
                     if (distanceToTarget <= searchRange)		            // SI distancia al objetivo es menor que el rango de busqueda..
                         if (distanceToTarget <= attackRange  //)
-                            && thisTransform.position.y >= playerTransform.position.y + 1)	                    // si está dentro de rango de ataque..
+                            && thisTransform.position.y >= playerTransform.position.y + 1)	                    // si estï¿½ dentro de rango de ataque..
                             currentState = EnemyState.Attacking;			                                // acelerar la velocidad de ataque
                         else
                             ChasePlayer();			                                // sino continuar rastreandolo a velocidad normal
-                    else									                        // SINO chequear rutina habitual de comportamiento cuando está solo...
-                        GoHome();						                            // Volver a casa! ( cambia dirección de lado y avanzar indefinidamente.. 
+                    else									                        // SINO chequear rutina habitual de comportamiento cuando estï¿½ solo...
+                        GoHome();						                            // Volver a casa! ( cambia direcciï¿½n de lado y avanzar indefinidamente.. 
                     break;
 
                 case EnemyState.Attacking:
