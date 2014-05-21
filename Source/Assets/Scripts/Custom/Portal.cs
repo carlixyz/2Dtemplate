@@ -68,7 +68,7 @@ public class Portal : MonoBehaviour
                 }
 
             //  else current player position is saved as a checkpoint
-            Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile] = transform.position; 
+			Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile] = transform.position; 
         }
     }
 
@@ -78,7 +78,7 @@ public class Portal : MonoBehaviour
         if (this.myType == type.door && hit.tag == "Player")
         {
                                                                             // current player position is saved      
-            Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile] = transform.position; 
+			Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile] = transform.position; 
 
             if ( Managers.Game.InputUp)
             {

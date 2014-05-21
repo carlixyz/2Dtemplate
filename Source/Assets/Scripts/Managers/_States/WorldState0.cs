@@ -15,7 +15,7 @@ public class WorldState0 : InGameState
     public override void DeInit()
     {
         //Debug.Log("Exit the current State and returning map");
-        Managers.Register.Stage1 = Managers.Register.currentLevelFile ;
+		Managers.Register.Stage1 = Managers.Register.currentLevelFile ;
 
         Managers.Tiled.Unload();
         base.DeInit();
@@ -35,7 +35,7 @@ public class WorldState0 : InGameState
     {
         //Debug.Log("Called Pampero Resume!");
 
-		if (Managers.Register.Player && !Managers.Game.IsPlaying)
+		if (Managers.Objects.Player && !Managers.Game.IsPlaying)
         {
             Managers.Game.LoadMap(Managers.Register.Stage1);
 

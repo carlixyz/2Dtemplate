@@ -41,7 +41,7 @@ public class pickupThing : MonoBehaviour {
         if ((pickup == 0) && gameObject.transform.parent == null)
             gameObject.tag = "pickup";
 
-		if ((int)pickup == 2 && thisTransform.parent == Managers.Register.Player.transform)
+		if ((int)pickup == 2 && thisTransform.parent == Managers.Objects.Player.transform)
             thisTransform.localPosition = Vector3.up * .25f ;
 	
     }

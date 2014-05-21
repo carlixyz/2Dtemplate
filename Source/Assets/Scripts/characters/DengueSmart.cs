@@ -63,9 +63,9 @@ private float distanceToTarget = 0;	                    // get dist to target po
                 case EnemyState.StandBy:
                     if (!playerTransform)
                     {
-						if (Managers.Register.Player)
+						if (Managers.Objects.Player)
                         {
-							playerTransform = Managers.Register.PlayerTransform;			        //	We can Use this system to get the player's Id & position
+							playerTransform = Managers.Objects.PlayerTransform;			        //	We can Use this system to get the player's Id & position
                             playerControl = playerTransform.GetComponent<PlayerControls>();
                             currentState = EnemyState.Roaming;
                         }
@@ -228,7 +228,7 @@ private float distanceToTarget = 0;	                    // get dist to target po
 
     void BeatDown()
     {
-        Managers.Register.Score += 50;
+		Managers.Register.Score += 50;
         Destroy(Instantiate(ParticleStars, thisTransform.position, thisTransform.rotation), 5);
         Managers.Audio.Play(soundCrash, thisTransform, 6.0f, 1.0f);
         gameObject.tag = "pickup";

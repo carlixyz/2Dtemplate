@@ -3,6 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 
+/* SCROLLMANAGER - RULES OF CONSIDERATIONS:
+ * 
+ * 
+ * - Load Files From Assets Datafolder as: "/SomeFolder/SomeImage.SomeExtension" ( Don't use 'Ñ' letter)
+ *   (Always before every Build Add again the "Levels" Folder with maps inside the 'ProjectName/ProjectName_Data/'Folder)
+ * 
+ * - A new Scroll Parallax system was added, the only issue it's that these layers not follow world position b
+ * because they are Camera's childs, but the depth property is still working (just with a diferent output)
+ * 
+ * */
+
 public class ScrollManager : MonoBehaviour 
 {
 	Vector3 oldPos;
@@ -12,14 +23,17 @@ public class ScrollManager : MonoBehaviour
 	ScrollLayer[] ScrollLayers;
 
 	Transform CamTransform;
-	Transform PlayerTransform;
+//	Transform PlayerTransform;
 
 	public void Load(XmlNodeList scrollLayers) 
 	{
 		CamTransform = Managers.Display.CamTransform;
 
-		foreach(XmlNode imgLayer in scrollLayers)
-			StartCoroutine (BuildScrollLayers (imgLayer, Managers.Register.currentLevelFile));
+		for (int index = scrollLayers.Count-1; index >= 0; index--) 										// TagName: Reversed TileSet Layers.
+			StartCoroutine ( BuildScrollLayers (scrollLayers.Item (index), Managers.Register.currentLevelFile));
+
+//		foreach(XmlNode imgLayer in scrollLayers)
+//			StartCoroutine (BuildScrollLayers (imgLayer, Managers.Register.currentLevelFile));
 
 		SetupScroll ();
 	}
@@ -46,13 +60,11 @@ public class ScrollManager : MonoBehaviour
 //		var cam = Camera.main;
 		//float Depth = (TileOutputSize.z - cam.transform.position.z);
 		
-		
 		//float Depth = TileOutputSize.z ;
 		//TileOutputSize.z += 0.5f;
 		
 		//if ( Depth == 0)
 		//    Depth = 1;
-		
 		
 		float Depth = -120;               //bool AutoDepth = true;						// -120 is Flag number (There won't be nothing deeper than 120)
 		
@@ -152,12 +164,7 @@ public class ScrollManager : MonoBehaviour
 	
 	void SetupScroll()
 	{
-		//if (Managers.Game.PlayerPrefab)
-		//PlayerTransform = Managers.Game.PlayerPrefab.transform;
-		
 		List<ScrollLayer> scrollList = new List<ScrollLayer>(FindObjectsOfType(typeof(ScrollLayer)) as ScrollLayer[]);
-		
-		//if ( scrollList.Count == 0 ) return;
 		
 		foreach (ScrollLayer scroll in scrollList)
 		{
@@ -170,7 +177,6 @@ public class ScrollManager : MonoBehaviour
 		#endif
 		ScrollLayers = scrollList.ToArray();
 
-//		PlayerTransform = Managers.Register.PlayerTransform;
 	}
 	
 	void UpdateScroll()
@@ -207,7 +213,7 @@ public class ScrollManager : MonoBehaviour
 			//    scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > PlayerTransform.position.y &&
 			//        scrollLayer.range.x < PlayerTransform.position.y ) );
 			
-			if ( Managers.Register.PlayerTransform )
+			if ( Managers.Objects.PlayerTransform )
 				scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > Managers.Display.MainCamera.transform.position.y &&
 				                                   scrollLayer.range.x < Managers.Display.MainCamera.transform.position.y ) );
 			
@@ -220,18 +226,11 @@ public class ScrollManager : MonoBehaviour
 					
 					if (scrollLayer.GetMaterial().HasProperty(textureName))
 					{
-						scrollLayer.GetMaterial().SetTextureOffset( textureName, WrapVector(
-							scrollLayer.GetMaterial().GetTextureOffset(textureName) +
-							//ScrollBaseSpeed * (scrollLayer.GetScrollType() == ScrollType.Auto ?
-							//                    scrollLayer.GetSpeed() * Time.deltaTime  + 
-							//                    new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-							//                        scrollValue.y * scrollLayer.GetSpeed().y)   :
-							//                    new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-							//                                scrollValue.y * scrollLayer.GetSpeed().y) )));
-							ScrollBaseSpeed * (scrollLayer.GetScrollType() == ScrollType.Auto ?
-						                   scrollLayer.GetSpeed() * Time.deltaTime :
-						                   new Vector2(scrollValue.x * scrollLayer.GetSpeed().x,
-						            scrollValue.y * scrollLayer.GetSpeed().y) )));
+						scrollLayer.GetMaterial().SetTextureOffset( textureName, 
+                           WrapVector( scrollLayer.GetMaterial().GetTextureOffset(textureName) +
+									 	ScrollBaseSpeed * (scrollLayer.GetScrollType() == ScrollType.Auto ?
+   										scrollLayer.GetSpeed() * Time.deltaTime :
+   										new Vector2(scrollValue.x * scrollLayer.GetSpeed().x, scrollValue.y * scrollLayer.GetSpeed().y) )));
 						// So, basically If scrollLayer mode is Auto, update by a deltaTime else it's Relative,
 						// create a new Vector with the new Player Position multiplied by each axis speed(stay quiet if zero) 
 					}
@@ -247,9 +246,9 @@ public class ScrollManager : MonoBehaviour
 		if (input.Contains(","))                                                        // if there's a comma, separate things
 		{
 			return new Vector2( float.Parse( input.Remove( input.IndexOf(",") )),
-			                   float.Parse( input.Remove(0, input.IndexOf(",") + 1) ));
+		                   float.Parse( input.Remove(0, input.IndexOf(",") + 1) ));			// else set just the X Axis 			
 		}
-		// else set just the X Axis 
+
 		return new Vector2( float.Parse(input), equalAxis * float.Parse(input));            // or both if 'AxisY' is enabled    
 	}
 	

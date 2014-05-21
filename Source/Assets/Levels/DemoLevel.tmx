@@ -71,10 +71,10 @@
   <image source="cielo.png"/>
  </imagelayer>
  <imagelayer name="nubes1" width="210" height="50">
-  <image source="nube1.png"/>
+  <image source="nubes1.png"/>
  </imagelayer>
- <imagelayer name="nuber2" width="210" height="50">
-  <image source="nube2.png"/>
+ <imagelayer name="nubes2" width="210" height="50">
+  <image source="nubes2.png"/>
  </imagelayer>
  <layer name="Fondo" width="210" height="50">
   <data encoding="base64" compression="gzip">

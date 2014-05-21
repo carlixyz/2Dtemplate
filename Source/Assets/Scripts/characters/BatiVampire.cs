@@ -65,9 +65,9 @@ private float distanceToTarget = 0;	                    // get dist to target po
                 case EnemyState.StandBy:
                     if (!playerTransform)
                     {
-						if (Managers.Register.Player)
+						if (Managers.Objects.Player)
                         {
-							playerTransform = Managers.Register.Player.transform;			        //	We can Use this system to get the player's Id & position
+							playerTransform = Managers.Objects.Player.transform;			        //	We can Use this system to get the player's Id & position
                             playerControl = playerTransform.GetComponent<PlayerControls>();
                             //playerProps = playerTransform.GetComponent<PlayerProperties>();
                             currentState = EnemyState.Roaming;
@@ -332,7 +332,7 @@ private float distanceToTarget = 0;	                    // get dist to target po
         }
         else if (other.CompareTag("p_shot"))
         {
-            Managers.Register.Score += Random.Range(1, 99);
+			Managers.Register.Score += Random.Range(1, 99);
             BeatDown();
         }
         else if (gameObject.CompareTag("p_shot") && !other.CompareTag("Item"))

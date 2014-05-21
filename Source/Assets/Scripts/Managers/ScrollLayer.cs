@@ -53,13 +53,6 @@ public class ScrollLayer : MonoBehaviour
 		
         if ( speed.x == 1000 )
           this.speed = new Vector2(1f / (weight + 0.00001f), speed.y);
-        //else
-        //  this.speed = speed;
-
-        //if ( speed == Vector2.zero )
-        //  this.speed = new Vector2(1f / (weight + 0.00001f), speed.y);
-        //else
-        //  this.speed = speed;
     }
 
     public float GetWeight()
@@ -114,11 +107,9 @@ public class ScrollLayer : MonoBehaviour
 #if !UNITY_FLASH
     public int CompareTo(ScrollLayer other)
     {
-        // If other is not a valid object reference, this instance is greater
-        if (other == null) return 1;
+		if (other == null) return 1; 	 	   												// If other is not a valid object reference, this instance is greater		    
 
-        // Compare underlying weights
-        return GetWeight().CompareTo(other.GetWeight());
+		return GetWeight().CompareTo(other.GetWeight());	 								// Compare underlying weights	  				
     }
 #endif
     internal static int Comparision(ScrollLayer layer, ScrollLayer other)
@@ -155,7 +146,7 @@ public class ScrollLayer : MonoBehaviour
         float width         = 0;
         float height        = 0;
 
-        Vector2 tempOffset = this.offset ;          ///////// <----------- Cam.GetPixelWidth(scrollLayer.transform.position)
+        Vector2 tempOffset = this.offset ;          // <----------- Cam.GetPixelWidth(scrollLayer.transform.position)
 
         if (texture)
         {
@@ -319,6 +310,7 @@ public class ScrollLayer : MonoBehaviour
     {
         StartCoroutine(SetupLayer());
     }
+
     IEnumerator SetupLayer()
     {
         yield return new WaitForEndOfFrame();
@@ -331,18 +323,6 @@ public class ScrollLayer : MonoBehaviour
     //    UpdateLayer();      // VS 2008, No rompas las bolas, SI ACEPTA 0 argumentos porque ya los tiene definidos x default
     //}
     //----------------------------------------------------------------------------------------//
-
-
-    //public Dictionary<int, string> Collisions = new Dictionary<int, string>();
-
-    //    // Use this for initialization
-    //void Start () {
-	
-    //}
-	
-    //// Update is called once per frame
-    //void Update () {
-	
-    //}
-
 }
+
+

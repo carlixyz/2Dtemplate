@@ -148,12 +148,10 @@ public class GameManager : MonoBehaviour
 						Managers.Audio.PlayMusic ((AudioClip)Resources.Load ("Sound/" + MapProperty.Attributes ["value"].Value, typeof(AudioClip)), .45f, 1);
 					
 					if(MapProperty.Attributes ["name"].Value.ToLower () == "zoom")
-						Managers.Register.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
+						Managers.Objects.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
 				}
 
-
 			////////////////////////////////////////////////////////////////////////////////
-			/// 
 		
 			Managers.Tiled.Load(Doc.DocumentElement);
 			Managers.Tiled.MapTransform.gameObject.name = fileName;
@@ -163,8 +161,6 @@ public class GameManager : MonoBehaviour
 			Managers.Scroll.Load(Doc.GetElementsByTagName("imagelayer"));
 			
 			Debug.Log ("Tiled Level Build Finished: " + fileName);
-
-
 			return true;
 		} 
 		
@@ -176,21 +172,14 @@ public class GameManager : MonoBehaviour
 	public void UnloadMap()
 	{
 		StopAllCoroutines();
-		
-//		if ( PlayerTransform != null )
-//		{
-//			if (Managers.Register.Player)
-//				Destroy(Managers.Register.Player);
-//			PlayerTransform = null;
-//		}
-		
+
 		Managers.Audio.StopMusic();
 		Managers.Display.CameraScroll.ResetBounds();
-		
-		Managers.Tiled.Unload ();
-		Managers.Scroll.Unload ();
-		Managers.Objects.Unload ();
 
+		Managers.Objects.Unload ();
+		Managers.Scroll.Unload ();
+		Managers.Tiled.Unload ();
+		
 		Managers.Register.currentLevelFile = string.Empty;
 	}
 
@@ -201,7 +190,7 @@ public class GameManager : MonoBehaviour
 
     //////////////////////////////////////////////////////////////
 
-	static bool ToggleUp = true;
+	internal static bool ToggleUp = true;
     public bool InputUp                            						// This it's a little oneShot Up Axis check for doors & like   
     {
         get
@@ -218,7 +207,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	static bool ToggleDown = true;
+	internal static bool ToggleDown = true;
     public bool InputDown                             					// This it's a little oneShot Down Axis check for doors & like   
     {
         get
@@ -235,7 +224,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	static bool ToggleLeft = true;
+	internal static bool ToggleLeft = true;
     public bool InputLeft                             					// This it's a little oneShot Left Axis check for doors & like   
     {
         get
@@ -252,7 +241,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	static bool ToggleRight = true;
+	internal static bool ToggleRight = true;
     public bool InputRight                             					// This it's a little oneShot RIght Axis check for doors & like   
     {
         get

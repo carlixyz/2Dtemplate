@@ -58,9 +58,9 @@ public class HomeState : GameState
         Managers.Display.ShowFlash(.5f);
         Managers.Audio.Play(Doors, Managers.Display.CamTransform);
 
-		if (Managers.Register.Player)
+		if (Managers.Objects.Player)
         {
-			Managers.Register.Player.GetComponent<PlayerControls>().enabled = false;
+			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
         }
             //Managers.Game.PlayerPrefab.SetActive(false); 
@@ -94,9 +94,9 @@ public class HomeState : GameState
     {
         //Managers.Game.IsPaused = false;
         //Time.timeScale = 1;
-		if (Managers.Register.Player)
+		if (Managers.Objects.Player)
         {
-			Managers.Register.Player.GetComponent<PlayerControls>().enabled = true;
+			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
         //if (Managers.Game.PlayerPrefab)
@@ -425,9 +425,9 @@ public class HomeState : GameState
         Managers.Display.ShowFlash(1);
         Managers.Audio.Music.volume = .45f;
 
-		if (Managers.Register.Player)
+		if (Managers.Objects.Player)
         {
-			Managers.Register.Player.GetComponent<PlayerControls>().enabled = true;
+			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
 
@@ -439,7 +439,7 @@ public class HomeState : GameState
         Managers.Audio.Music.volume = .65f;
 
 
-		if (Managers.Register.Player)
+		if (Managers.Objects.Player)
         {
             Managers.Game.IsPlaying = true;
 
@@ -463,7 +463,7 @@ public class HomeState : GameState
 
 
             //Managers.Game.IsPlaying = false;
-			Managers.Register.Player.GetComponent<PlayerControls>().enabled = false;
+			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
  
         }

@@ -2,25 +2,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System;
 
+
+/* OBJECTMANAGER - RULES OF CONSIDERATIONS:
+ * 
+ * - Load Files From Assets Datafolder as: "/SomeFolder/SomeFile.SomeExtension" ( Don't use 'Ñ' letter)
+ *   (Always before every Build Add again the "Levels" Folder with maps inside the 'ProjectName/ProjectName_Data/'Folder)
+ * 
+ * - Use Tiled Editor and U can rename file extensions from '.TMX' to '.XML' (And save in Gzip + Base64 Compression)
+ * 
+ * - WIP
+ *  
+ * */
 public class ObjManager : MonoBehaviour 
 {
 
-    public GameObject Player;
-    public Transform PlayerTransform;
+	public List<GameObject> ObjList;
+	public int ObjTotal = 0;
+
+	public GameObject Player;
+	public Transform PlayerTransform;
 
 	public bool Load(XmlNodeList Layer)
 	{
+		ObjList = new List<GameObject>();
+
 		foreach (XmlNode ObjGrp in Layer)
 			StartCoroutine (BuildPrefabs (ObjGrp));
-
+			
+//		ObjList = objectsList.ToArray();
 		return true;
 	}
 	
 	public void Unload()
 	{
-//		foreach (XmlNode ObjGrp in Layer)
-//			StartCoroutine (BuildPrefabs (ObjGrp));
+		ObjTotal = 0;
+		ObjList.Clear ();
+
+		if ( PlayerTransform != null )
+		{
+			if (Player)
+				Destroy(Player);
+			PlayerTransform = null;
+		}
 	}
 
 	public IEnumerator BuildPrefabs(XmlNode ObjectsGroup)
@@ -49,8 +74,8 @@ public class ObjManager : MonoBehaviour
 			if ( Resources.Load( "Prefabs/" + ObjName, typeof(GameObject) ) )                
 			{
 				GameObject ObjPrefab =(GameObject)Instantiate( Resources.Load( "Prefabs/" + ObjName , typeof(GameObject)));
-				
 				Transform ObjTransform = ObjPrefab.transform;
+
 				ObjTransform.position = new Vector3(
 					(float.Parse(ObjInfo.Attributes["x"].Value) / tilewidth) + (ObjTransform.localScale.x * .5f),        // X
 					height - (float.Parse(ObjInfo.Attributes["y"].Value) / tileheight - ObjTransform.localScale.y * .5f),// Y		 		     
@@ -76,10 +101,10 @@ public class ObjManager : MonoBehaviour
 				{
 				case "pombero":
 				{
-					Managers.Register.Player = ObjPrefab;
-					Managers.Register.PlayerTransform = ObjPrefab.transform;
-					Managers.Display.CameraScroll.SetTarget( Managers.Register.PlayerTransform, false );
-					PlayerTransform = Managers.Register.PlayerTransform;
+					Managers.Objects.Player = ObjPrefab;
+					Managers.Objects.PlayerTransform = ObjPrefab.transform;
+					Managers.Display.CameraScroll.SetTarget( Managers.Objects.PlayerTransform, false );
+					PlayerTransform = Managers.Objects.PlayerTransform;
 					//Debug.Log("setting up position in TileManager");
 					Managers.Register.SetPlayerPos();
 					
@@ -98,15 +123,15 @@ public class ObjManager : MonoBehaviour
 				case "door":
 					goto case "warp";
 				case "warp":
-//				{
-//					Portal portal = (Portal)ObjPrefab.GetComponent<Portal>();
-//					portal.SetType( (Portal.type)Enum.Parse( typeof(Portal.type), ObjName));
-//					
-//					if ( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0) != null )
-//						portal.SetTarget( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0).Attributes["value"].Value);
-//					
-//					portal.SetId( ( ObjInfo.Attributes["name"] != null ? ObjInfo.Attributes["name"].Value : ObjName ) );
-//				}
+				{
+					Portal portal = (Portal)ObjPrefab.GetComponent<Portal>();
+					portal.SetType( (Portal.type)Enum.Parse( typeof(Portal.type), ObjName));
+					
+					if ( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0) != null )
+						portal.SetTarget( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0).Attributes["value"].Value);
+					
+					portal.SetId( ( ObjInfo.Attributes["name"] != null ? ObjInfo.Attributes["name"].Value : ObjName ) );
+				}
 					break;
 					
 				case "flyPlatformA":
@@ -199,10 +224,13 @@ public class ObjManager : MonoBehaviour
 				}
 				
 				#endregion
+
+				ObjList.Add (ObjPrefab);
 				
 			}
 			else Debug.LogWarning("Object '" + ObjName + "' Was not found at: " + "Resources/Prefabs/");
-			
+
+			ObjTotal =  ObjList.Count;
 			yield return 0;
 		}
 	}

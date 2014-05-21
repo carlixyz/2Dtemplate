@@ -107,7 +107,7 @@ namespace Behaviours                            // Some Enemies Behviours
             }
             else if (other.CompareTag("p_shot"))
             {
-                Managers.Register.Score += 10 * Random.Range(1, 15);
+				Managers.Register.Score += 10 * Random.Range(1, 15);
                 //BeatDown();
             }
             else if (Character.CompareTag("p_shot") && !other.CompareTag("Item"))

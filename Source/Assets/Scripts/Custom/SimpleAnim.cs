@@ -121,8 +121,8 @@ namespace CustomAnimations
 
                     case AnimationType.Kurupi:
 
-					if (Managers.Register.Player != null)
-						if (Managers.Register.Player.transform.position.x > thisTransform.position.x)
+					if (Managers.Objects.Player != null)
+						if (Managers.Objects.Player.transform.position.x > thisTransform.position.x)
                                 Orientation = -1;
                             else
                                 Orientation = 1;

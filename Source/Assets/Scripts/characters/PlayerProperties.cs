@@ -76,13 +76,13 @@ void  Start (){
 	animPlay 	    = GetComponent<AnimSprite>();
 	dead = false;
 		
-    if (Managers.Register.Inventory == DataManager.Items.Hat)
+	if (Managers.Register.Inventory == DataManager.Items.Hat)
         renderer.material.SetFloat("_KeyY", 0.05f);
 
     Managers.Display.ShowFlash(1.0f);
 
-    if (Managers.Register.GetComponent<LevelAttributes>())
-        DownSideLimit = Managers.Register.GetComponent<LevelAttributes>().MinScreenLimit;
+    if (Managers.Objects.GetComponent<LevelAttributes>())
+        DownSideLimit = Managers.Objects.GetComponent<LevelAttributes>().MinScreenLimit;
 
     StartCoroutine(CoUpdate());
 }
@@ -123,7 +123,7 @@ void  UpdatePlayerState (){
                     StartCoroutine(Sleeping());
                 }
 
-                if ((Input.GetButtonUp("Fire1") || Input.GetButtonUp("Jump")) && (Managers.Register.Lifes > 0))
+			if ((Input.GetButtonUp("Fire1") || Input.GetButtonUp("Jump")) && (Managers.Register.Lifes > 0))
                 {
                     playerControls.enabled = true;
                     SetPlayerState(PlayerState.Flickering);
@@ -157,7 +157,7 @@ void  UpdatePlayerState (){
             }
 	}
 
-    if ((playerState & PlayerState.Flickering) != PlayerState.Flickering || Managers.Register.Health == 0)
+	if ((playerState & PlayerState.Flickering) != PlayerState.Flickering || Managers.Register.Health == 0)
         renderer.enabled = true;
 	
 }
@@ -192,8 +192,8 @@ void  OnTriggerEnter (  Collider other   ){
 		Destroy( Instantiate ( ParticleStars, thisTransform.position, thisTransform.rotation), 5);
 		
 		Destroy( other.gameObject );
-        Managers.Register.Fruits++;
-        Managers.Register.Score += 50 + Random.Range(1, 99) ;
+			Managers.Register.Fruits++;
+			Managers.Register.Score += 50 + Random.Range(1, 99) ;
         Managers.Audio.Play(soundFruits, thisTransform);
 	}
 
@@ -216,15 +216,15 @@ void  OnTriggerEnter (  Collider other   ){
 
         Destroy(other.gameObject);
         renderer.material.SetFloat("_KeyY", 0.25f);
-        Managers.Register.Inventory = DataManager.Items.Whistler;
+		Managers.Register.Inventory = DataManager.Items.Whistler;
     }
 
     if (other.name.ToLower() == "ca" + (char)0x00F1 + "a")// Should say 'Caña' //other.CompareTag( "p_shot") && !HatShoot   )
 	{
 		Managers.Audio.Play( soundPowerUp, thisTransform);
 		Destroy( Instantiate ( ParticleStars, thisTransform.position, thisTransform.rotation), 5);
-        Managers.Register.FireGauge++;
-        Managers.Register.FireGauge = Mathf.Clamp(Managers.Register.FireGauge, 0, 3);
+		Managers.Register.FireGauge++;
+		Managers.Register.FireGauge = Mathf.Clamp(Managers.Register.FireGauge, 0, 3);
 		
 		Destroy( other.gameObject );
         renderer.material.SetFloat("_KeyY", 0.25f);
@@ -238,8 +238,8 @@ void  OnTriggerEnter (  Collider other   ){
             Destroy(Instantiate(ParticleStars, thisTransform.position, thisTransform.rotation), 5);
 
         Destroy(other.gameObject);
-        Managers.Register.Fruits += 32;
-        Managers.Register.Score += 50 + Random.Range(1, 99);
+		Managers.Register.Fruits += 32;
+		Managers.Register.Score += 50 + Random.Range(1, 99);
         Managers.Audio.Play(soundFruits, thisTransform);
         Managers.Audio.Play(soundFruits, thisTransform);
         Managers.Audio.Play(soundFruits, thisTransform);
@@ -254,8 +254,8 @@ void  OnTriggerEnter (  Collider other   ){
             Destroy(Instantiate(ParticleStars, thisTransform.position, thisTransform.rotation), 5);
 
         Destroy(other.gameObject);
-        Managers.Register.Lifes += 1;
-        Managers.Register.Score += 50 + Random.Range(1, 99);
+		Managers.Register.Lifes += 1;
+		Managers.Register.Score += 50 + Random.Range(1, 99);
         Managers.Audio.Play(soundPowerUp, thisTransform);
     }
 	
@@ -419,11 +419,11 @@ IEnumerator  HitDead ()
 
 		int orientation= playerControls.orientation;							
 		Managers.Display.ShowStatus();
-        Managers.Register.Health--;
+		Managers.Register.Health--;
 		Managers.Audio.Play( soundHurt, thisTransform);
         renderer.enabled = true;
 
-        if (Managers.Register.Health > 0)										// If health still available do damage and continue 
+		if (Managers.Register.Health > 0)										// If health still available do damage and continue 
 		{
 			float hurtTimer= Time.time + 0.2f;
 			while( hurtTimer > Time.time )
@@ -448,7 +448,7 @@ IEnumerator  InstaKill (  bool ReSpawn , int pushDirection ){
 		dead = true;
  
 		Managers.Display.ShowStatus();
-        Managers.Register.Lifes -= 1;
+		Managers.Register.Lifes -= 1;
 		renderer.material.color = Color.white;
 		renderer.enabled = true;
 //		Managers.Audio.Play( soundDie, thisTransform); 
@@ -485,17 +485,17 @@ IEnumerator  InstaKill (  bool ReSpawn , int pushDirection ){
 		
 		Managers.Display.ShowStatus();
 
-        if (Managers.Register.Lifes > 0)
+		if (Managers.Register.Lifes > 0)
         {
 			if ( ReSpawn )
 			{
 				yield return new WaitForSeconds( 0.5f );
                 Managers.Display.ShowFlash(1.5f);
-                thisTransform.position = Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile];	
+				thisTransform.position = Managers.Register.MapCheckPoints[Managers.Register.currentLevelFile];	
 				playerControls.velocity = Vector3.zero;
 			}
 			SetPlayerState( PlayerState.Asleep );						// if there are life change state to Asleep
-            Managers.Register.Health = 3;
+			Managers.Register.Health = 3;
         }				
 		else
 		{ 	
@@ -520,13 +520,13 @@ void  UseInventory (){
     if (Managers.Game.IsPaused)
         return;
 
-	switch ( Managers.Register.Inventory )
+		switch ( Managers.Register.Inventory )
 	{
 		case DataManager.Items.Empty: 
 			break;
 			
 		case DataManager.Items.Hat: 								// Throw Hat..
-		if( (Managers.Register.Inventory  & DataManager.Items.Hat) == DataManager.Items.Hat )
+			if( (Managers.Register.Inventory  & DataManager.Items.Hat) == DataManager.Items.Hat )
 			Managers.Audio.Play( soundHat, thisTransform); 
 			StartCoroutine(ThrowHat());
 			Managers.Register.Inventory &= (~DataManager.Items.Hat);
@@ -547,13 +547,13 @@ void  UseInventory (){
 			break;			
 			
 		case DataManager.Items.Fire: 								// Do Fire things..
-            if ((Managers.Register.FireGauge) == 1)
+			if ((Managers.Register.FireGauge) == 1)
             {
                 Managers.Audio.Play(soundFlaming, thisTransform);
 
                 StartCoroutine( ThrowFlame());           // instantiate flame         
             }
-            else if ((Managers.Register.FireGauge) == 2)
+			else if ((Managers.Register.FireGauge) == 2)
             {
                 Managers.Audio.Play(soundFlaming, thisTransform);
                 StartCoroutine(ThrowFire());            // instantiate fireball              
@@ -564,7 +564,7 @@ void  UseInventory (){
                 SetPlayerState(PlayerState.WildFire);
             }
 
-            Managers.Register.FireGauge = 0;
+			Managers.Register.FireGauge = 0;
 			Managers.Register.Inventory &= (~DataManager.Items.Fire);
 			break;
 	}

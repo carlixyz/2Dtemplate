@@ -34,8 +34,6 @@ public class DataManager : MonoBehaviour
 	public string previousLevelFile = string.Empty;
     public Dictionary<string, Vector3> MapCheckPoints = new Dictionary<string, Vector3>();
 
-    public GameObject Player;
-	public Transform PlayerTransform;
 
     //public List<int> TopScore = new List<int>();
     //public Dictionary<int, string> TopScorePlayers = new Dictionary<int, string>();
@@ -84,9 +82,9 @@ public class DataManager : MonoBehaviour
 
                                                                                 // If there's a previous saved position use it
         if (MapCheckPoints[currentLevelFile] != Vector3.zero)
-			Managers.Register.PlayerTransform.position = MapCheckPoints[currentLevelFile];
+			Managers.Objects.PlayerTransform.position = MapCheckPoints[currentLevelFile];
         else
-			MapCheckPoints[currentLevelFile] = Managers.Register.PlayerTransform.position;
+			MapCheckPoints[currentLevelFile] = Managers.Objects.PlayerTransform.position;
   
     }           
 
@@ -165,7 +163,7 @@ public class DataManager : MonoBehaviour
 				string str4 = "*";
 				objArray[2] = (object) str4;						// Then We add a '*' FLAG sepparator between 1º & 2º Therm
 				
-				Vector3 local =  MapCheckPoints[current];			// Then We hack the Vectors Value directly inside the objects Array as it 
+				Vector3 local =  MapCheckPoints[current];			// Then We hack the Vectors Value directly inside the Register Array as it 
 				objArray[3] = (object) local.ToString("G4");
 				
 				string str5 = "*";
@@ -254,7 +252,7 @@ public class DataManager : MonoBehaviour
 //				string str4 = "*";
 //				objArray[2] = (object) str4;						// Then We add a '*' FLAG sepparator between 1º & 2º Therm
 //				
-//				Vector3 local =  MapCheckPoints[current];			// Then We hack the Vectors Value directly inside the objects Array as it 
+//				Vector3 local =  MapCheckPoints[current];			// Then We hack the Vectors Value directly inside the Register Array as it 
 //				objArray[3] = (object) local.ToString("G4");
 //				
 //				string str5 = "*";
@@ -300,7 +298,7 @@ public class DataManager : MonoBehaviour
 
 
 
-//Store objects in PlayerPrefs.
+//Store Register in PlayerPrefs.
 //Usage:
 //var myObject = new MyClass();
 //Prefs.Save<MyClass>("my object", myObject);

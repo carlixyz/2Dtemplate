@@ -19,8 +19,6 @@ using Ionic.Zlib;
  * - In Tiled Never mix two diferent TileSet images inside the same Layer
  *  (when Using Resources.Load(..) always quit the first '/' & the last '.whatever' extension)
  *  
- * - A new Scroll Parallax system was added, the only issue it's that these layers not follow world position b
- * because they are Camera's childs, but the depth property is still working (just with a diferent output)
  * */
 
 public class TileManager : MonoBehaviour 
@@ -61,14 +59,12 @@ public class TileManager : MonoBehaviour
 //		}
 
 		XmlNodeList Layers = docElement.GetElementsByTagName ("layer");
-		int Total = Layers.Count;
 
-		for (int index = Total-1; index >= 0; index--) 										// TagName: Reversed TileSet Layers.
+		for (int index = Layers.Count-1; index >= 0; index--) 									// TagName: Reversed TileSet Layers.
 			StartCoroutine ( BuildLayer (Layers.Item (index) ));
 
-//		foreach (XmlNode Layer in docElement.GetElementsByTagName("layer").) 				// TagName: Ordered TileSet Layers. (not work)
+//		foreach (XmlNode Layer in docElement.GetElementsByTagName("layer").) 					// TagName: Ordered TileSet Layers. (not work)
 //			StartCoroutine ( BuildLayer (Layer));
-
 
 		return true;
 	}
@@ -292,7 +288,6 @@ public class TileManager : MonoBehaviour
                                 (Tile.AddComponent("BoxCollider") as BoxCollider).size = Vector3.one;       // or default's Box Collision 
                                 break;
                 		}
-
 
         			return Tile;
 				}	//break;

@@ -44,8 +44,8 @@ public class DengueFly : MonoBehaviour
     	rigidbody.useGravity = false;
     }
 
-	if (!target && Managers.Register.Player)
-		target = Managers.Register.Player.transform;
+		if (!target && Managers.Objects.Player)
+			target = Managers.Objects.Player.transform;
         //target =  GameObject.Find("Pombero").transform;			//	We can Use this system to get the player's Id & position
 	
 	if ( target) 
@@ -76,9 +76,9 @@ public class DengueFly : MonoBehaviour
         {
             if (!target)
             {
-				if (Managers.Register.Player)
+				if (Managers.Objects.Player)
                 {
-					target = Managers.Register.PlayerTransform;
+					target = Managers.Objects.PlayerTransform;
                     linkToPlayerControls = (PlayerControls)target.GetComponent<PlayerControls>();
                 }
                 else

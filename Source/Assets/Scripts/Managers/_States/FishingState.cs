@@ -339,15 +339,15 @@ public class FishingState : GameState
                         case BonusObjects.Entity.typeId.ItemFire:
                             Managers.Register.FireGauge++;
                             Managers.Register.FireGauge = Mathf.Clamp(Managers.Register.FireGauge, 0, 3);
-							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.25f);
+							Managers.Objects.Player.renderer.material.SetFloat("_KeyY", 0.25f);
                             Managers.Register.Inventory = DataManager.Items.Fire;
                             break;
                         case BonusObjects.Entity.typeId.ItemHat:
-							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.05f);
+							Managers.Objects.Player.renderer.material.SetFloat("_KeyY", 0.05f);
                             Managers.Register.Inventory = DataManager.Items.Hat;
                             break;
                         case BonusObjects.Entity.typeId.ItemWhistler:
-							Managers.Register.Player.renderer.material.SetFloat("_KeyY", 0.25f);
+							Managers.Objects.Player.renderer.material.SetFloat("_KeyY", 0.25f);
                             Managers.Register.Inventory = DataManager.Items.Whistler;
                             break;
                     }

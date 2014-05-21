@@ -85,9 +85,9 @@ IEnumerator CoUpdate()	                                                        /
     {
         if (!target)
         {
-			if (Managers.Register.Player)
+			if (Managers.Objects.Player)
             {
-				target = Managers.Register.PlayerTransform;
+				target = Managers.Objects.PlayerTransform;
                 linkToPlayerControls = (PlayerControls)target.GetComponent<PlayerControls>();
             }
             else
@@ -373,7 +373,7 @@ IEnumerator OnTriggerEnter(  Collider other  )											// other.transform.posi
 
 void  BeatDown ()
 {
-    Managers.Register.Score += 5 * Random.Range(1, 99);
+	Managers.Register.Score += 5 * Random.Range(1, 99);
     Managers.Audio.Play(soundCrash, thisTransform, 6.0f, 1.0f);
 	gameObject.tag = "pickup";
 	velocity.x *= -.25f;

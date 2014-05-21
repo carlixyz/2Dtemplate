@@ -27,8 +27,8 @@ namespace BonusObjects
             ActiveSpeed = Random.Range(5, 10);
             
 
-            if (  Managers.Register.Player != null)
-				playerTransform = Managers.Register.PlayerTransform;
+            if (  Managers.Objects.Player != null)
+				playerTransform = Managers.Objects.PlayerTransform;
 
             StartCoroutine(CoUpdate());
         }
@@ -54,8 +54,8 @@ namespace BonusObjects
                 }
                 else
                 {
-					if (Managers.Register.Player != null)
-						playerTransform = Managers.Register.Player.transform;
+					if (Managers.Objects.Player != null)
+						playerTransform = Managers.Objects.Player.transform;
                 }
 
                 yield return 0;

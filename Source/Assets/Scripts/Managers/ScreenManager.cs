@@ -119,6 +119,10 @@ public Texture2D FlashTex           = null;                          // Scene Ra
     public void ShowFlash(float FlashDelay)
     {
         if (FlashBang) return;
+
+		FlashPos.width = Screen.width;
+		FlashPos.height = Screen.height;
+
         FlashBang = true;
         FlashLapse = FlashDelay;
     }
@@ -244,6 +248,9 @@ public Texture2D FlashTex           = null;                          // Scene Ra
 
     public void Render()
     {
+//     FlashPos                   = new Rect(0, 0, Screen.width, Screen.height);
+//		if (FlashPos.
+
         if (FlashBang && FlashTex)
         {
             GUI.DrawTextureWithTexCoords(FlashPos, FlashTex, new Rect(FlashX * .25f, FlashY * .25f, .25f, .25f));

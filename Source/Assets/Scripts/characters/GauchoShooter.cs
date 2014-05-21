@@ -84,9 +84,9 @@ IEnumerator CoUpdate ()	 											// void  Update ()
     {
         if (!target)
         {
-			if (Managers.Register.Player)
+			if (Managers.Objects.Player)
             {
-				target = Managers.Register.PlayerTransform;			//	We can Use this system to get the player's Id & position
+				target = Managers.Objects.PlayerTransform;			//	We can Use this system to get the player's Id & position
                 linkToPlayerControls = (PlayerControls)target.GetComponent<PlayerControls>() ;
             }
             else

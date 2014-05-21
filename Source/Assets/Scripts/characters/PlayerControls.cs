@@ -51,7 +51,7 @@ public class PlayerControls : MonoBehaviour
 
         Collider = transform.GetComponentInChildren<BoxCollider>();
 
-        if (Managers.Register.PlayerAutoRunning)
+		if (Managers.Register.PlayerAutoRunning)
             UpdateInput = new InputDelegate(ControlAuto);
         else
             UpdateInput = new InputDelegate(ControlClassic);
