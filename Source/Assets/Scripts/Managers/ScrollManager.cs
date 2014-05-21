@@ -14,9 +14,9 @@ public class ScrollManager : MonoBehaviour
 	Transform CamTransform;
 	Transform PlayerTransform;
 
-	public void Init(XmlNodeList scrollLayers) 
+	public void Load(XmlNodeList scrollLayers) 
 	{
-		CamTransform = Managers.Display.camTransform;
+		CamTransform = Managers.Display.CamTransform;
 
 		foreach(XmlNode imgLayer in scrollLayers)
 			StartCoroutine (BuildScrollLayers (imgLayer, Managers.Register.currentLevelFile));
@@ -24,7 +24,7 @@ public class ScrollManager : MonoBehaviour
 		SetupScroll ();
 	}
 
-	public void Deinit() 
+	public void Unload() 
 	{
         ScrollBaseSpeed = 1;
 		oldPos = Vector3.zero;
@@ -161,7 +161,7 @@ public class ScrollManager : MonoBehaviour
 		
 		foreach (ScrollLayer scroll in scrollList)
 		{
-			scroll.SetWeight(Vector3.Distance( Managers.Display.camTransform.position, scroll.transform.position));
+			scroll.SetWeight(Vector3.Distance( Managers.Display.CamTransform.position, scroll.transform.position));
 		}
 		#if UNITY_FLASH
 		scrollList.sort(ScrollLayer.Comparision);

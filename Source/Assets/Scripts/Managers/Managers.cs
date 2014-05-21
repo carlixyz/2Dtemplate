@@ -8,6 +8,7 @@ using System.Collections;
 [RequireComponent(typeof(DataManager))]
 [RequireComponent(typeof(TileManager))]
 [RequireComponent(typeof(ScrollManager))]
+[RequireComponent(typeof(ObjManager))]
 
 public class Managers : MonoBehaviour
 {
@@ -47,6 +48,12 @@ public class Managers : MonoBehaviour
 		get { return scrollManager; }
 	}
 
+	private static ObjManager objManager;
+	public static ObjManager Objects
+	{
+		get { return objManager; }
+	}
+
     private static ConversationManager conversationManager;
     public static ConversationManager Dialog
     {
@@ -61,10 +68,10 @@ public class Managers : MonoBehaviour
         screenManager = GetComponentInChildren<ScreenManager>();
         audioManager = GetComponentInChildren<AudioManager>();
         dataManager = GetComponentInChildren<DataManager>();
-        tileManager = GetComponentInChildren<TileManager>();
-        scrollManager = GetComponentInChildren<ScrollManager>();
         conversationManager = GetComponentInChildren<ConversationManager>();
-
+		tileManager = GetComponentInChildren<TileManager>();
+		scrollManager = GetComponentInChildren<ScrollManager>();
+		objManager = GetComponentInChildren<ObjManager>();
  
         //Make this game object persistant
         DontDestroyOnLoad(gameObject);

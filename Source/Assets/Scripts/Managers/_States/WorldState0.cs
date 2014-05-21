@@ -37,7 +37,7 @@ public class WorldState0 : InGameState
 
 		if (Managers.Register.Player && !Managers.Game.IsPlaying)
         {
-            Managers.Tiled.Load(Managers.Register.Stage1);
+            Managers.Game.LoadMap(Managers.Register.Stage1);
 
             //Debug.Log("Reloaded Pampero Level!");
 

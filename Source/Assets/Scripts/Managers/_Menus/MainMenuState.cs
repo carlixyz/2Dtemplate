@@ -84,7 +84,7 @@ public class MainMenuState : GameState
 		TitlePrefab = null;
 
 //		OptionsSet.Clear();
-		System.Array.Clear(OptionsSet, 0, OptionsSet.Length);
+//		System.Array.Clear(OptionsSet, 0, OptionsSet.Length);
         OptionsList.Clear();
 
         FullText = "";

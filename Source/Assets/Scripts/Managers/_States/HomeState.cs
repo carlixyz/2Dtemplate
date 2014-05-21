@@ -56,7 +56,7 @@ public class HomeState : GameState
         //Managers.Game.IsPaused = true;
         //Time.timeScale = 0.00000000000001f;
         Managers.Display.ShowFlash(.5f);
-        Managers.Audio.Play(Doors, Managers.Display.camTransform);
+        Managers.Audio.Play(Doors, Managers.Display.CamTransform);
 
 		if (Managers.Register.Player)
         {
@@ -120,12 +120,12 @@ public class HomeState : GameState
 
             if (currentState == HouseState.Menu)
             {
-                Managers.Audio.Play(Doors, Managers.Display.camTransform);
+                Managers.Audio.Play(Doors, Managers.Display.CamTransform);
                 Managers.Game.PopState();
             }
             else
             {
-                Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                 currentState = HouseState.Menu;
             }
         }
@@ -141,12 +141,12 @@ public class HomeState : GameState
 
                 if (Managers.Game.InputDown && (ChooseOption > 0))
                 {
-                    Managers.Audio.Play(Select, Managers.Display.camTransform);
+                    Managers.Audio.Play(Select, Managers.Display.CamTransform);
                     ChooseOption--;
                 }
                 if (Managers.Game.InputUp && (ChooseOption < (TotalOptions - 1)))
                 {
-                    Managers.Audio.Play(Select, Managers.Display.camTransform);
+                    Managers.Audio.Play(Select, Managers.Display.CamTransform);
                     ChooseOption++;
                 }
 
@@ -155,7 +155,7 @@ public class HomeState : GameState
                         case "Salir":             // Salir
                             if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return"))
                             {
-                                Managers.Audio.Play(Doors, Managers.Display.camTransform);
+                                Managers.Audio.Play(Doors, Managers.Display.CamTransform);
 
                                 Managers.Display.ShowFlash(.5f);
                                 Managers.Game.PopState();
@@ -167,7 +167,7 @@ public class HomeState : GameState
                             {
                                 Managers.Display.ShowFlash(.25f);
                                 //Managers.Display.ShowStatus();
-                                Managers.Audio.Play(HealthRefill, Managers.Display.camTransform );
+                                Managers.Audio.Play(HealthRefill, Managers.Display.CamTransform );
                                 Managers.Register.Health = 3;
                             }
                             break;
@@ -175,7 +175,7 @@ public class HomeState : GameState
                         case "Ver Concept Arts":             // Arte Concept
                             if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return"))
                             {
-                                Managers.Audio.Play(Play, Managers.Display.camTransform);
+                                Managers.Audio.Play(Play, Managers.Display.CamTransform);
                                 Managers.Display.ShowFlash(.2f);
                                 currentState = HouseState.Concept;
                                 Managers.Game.IsPlaying = false;
@@ -186,12 +186,12 @@ public class HomeState : GameState
 
                             if (Managers.Game.InputLeft && ChooseMusic > 0)
                             {
-                                Managers.Audio.Play(Select, Managers.Display.camTransform);
+                                Managers.Audio.Play(Select, Managers.Display.CamTransform);
                                 ChooseMusic--;
                             }
                             if (Managers.Game.InputRight && ChooseMusic < TotalMusics - 1)
                             {
-                                Managers.Audio.Play(Select, Managers.Display.camTransform);
+                                Managers.Audio.Play(Select, Managers.Display.CamTransform);
                                 ChooseMusic++;
                             }
 
@@ -202,13 +202,13 @@ public class HomeState : GameState
 
                                 if ((Managers.Audio.Music.clip == MusicList[ChooseMusic]) && Managers.Audio.Music.isPlaying)
                                 {
-                                    Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                                    Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                                     Managers.Audio.StopMusic();
                                 }
                                 else
                                 {
                                     Managers.Audio.PlayMusic(MusicList[ChooseMusic], 0.65f, 1);
-                                    Managers.Audio.Play(Play, Managers.Display.camTransform);
+                                    Managers.Audio.Play(Play, Managers.Display.CamTransform);
                                 }
                             }
                             break;
@@ -217,18 +217,18 @@ public class HomeState : GameState
 
                             if (Managers.Game.InputLeft && ChooseWorld > 0)
                             {
-                                Managers.Audio.Play(Select, Managers.Display.camTransform);
+                                Managers.Audio.Play(Select, Managers.Display.CamTransform);
                                 ChooseWorld--;
                             }
                             if (Managers.Game.InputRight && ChooseWorld < TotalWorlds - 1)
                             {
-                                Managers.Audio.Play(Select, Managers.Display.camTransform);
+                                Managers.Audio.Play(Select, Managers.Display.CamTransform);
                                 ChooseWorld++;
                             }
 
                             if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return"))
                             {
-                                Managers.Audio.Play(Play, Managers.Display.camTransform);
+                                Managers.Audio.Play(Play, Managers.Display.CamTransform);
                                 Managers.Display.ShowFlash(1.5f);
 
                                 if (WorldsList[ChooseWorld] == "Sarasa")
@@ -252,7 +252,7 @@ public class HomeState : GameState
                         case "Leer Historietas":             // Comic
                             if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return"))
                             {
-                                Managers.Audio.Play(Play, Managers.Display.camTransform);
+                                Managers.Audio.Play(Play, Managers.Display.CamTransform);
                                 Managers.Display.ShowFlash(.2f);
                                 currentState = HouseState.Comics;
                                 Managers.Game.IsPlaying = false;
@@ -266,19 +266,19 @@ public class HomeState : GameState
 
                 if (Managers.Game.InputLeft && ChoosePic > 0)
                 {
-                    Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                    Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                     ChoosePic--;
                 }
                 if (Managers.Game.InputRight && ChoosePic < TotalPics - 1)
                 {
-                    Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                    Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                     ChoosePic++;
                 }
 
                 if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return") || Input.GetKeyDown("escape") ||
                  Input.GetKeyDown("escape") || Input.GetButtonDown("Fire3") || Input.GetButtonDown("Select"))
                 {
-                    Managers.Audio.Play(Play, Managers.Display.camTransform);
+                    Managers.Audio.Play(Play, Managers.Display.CamTransform);
                     Managers.Display.ShowFlash(.5f);
                     currentState = HouseState.Menu;
                     Managers.Game.IsPlaying = true;
@@ -292,20 +292,20 @@ public class HomeState : GameState
             case HouseState.Comics:
                 if (Managers.Game.InputLeft && ChooseComic > 0)
                 {
-                    Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                    Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                     ChooseComic--;
                 }
 
                 if (Managers.Game.InputRight && ChooseComic < TotalComics - 1)
                 {
-                    Managers.Audio.Play(Clang, Managers.Display.camTransform);
+                    Managers.Audio.Play(Clang, Managers.Display.CamTransform);
                     ChooseComic++;
                 }
 
                 if (Input.GetButtonDown("Fire1") || Input.GetKeyDown("return") || Input.GetKeyDown("escape") ||
                  Input.GetKeyDown("escape") || Input.GetButtonDown("Fire3") || Input.GetButtonDown("Select"))
                 {
-                    Managers.Audio.Play(Play, Managers.Display.camTransform);
+                    Managers.Audio.Play(Play, Managers.Display.CamTransform);
                     Managers.Display.ShowFlash(.5f);
                     currentState = HouseState.Menu;
                     Managers.Game.IsPlaying = true;
@@ -321,7 +321,7 @@ public class HomeState : GameState
         Managers.Display.ShowFlash(1);
         Managers.Tiled.Unload();
 
-        if (Managers.Tiled.Load(world))
+        if (Managers.Game.LoadMap(world))
         {
             Managers.Game.PushState(typeof(DummyState));
             Input.ResetInputAxes();
@@ -459,7 +459,7 @@ public class HomeState : GameState
 //                Managers.Tiled.Load("/Levels/Home1.tmx");
 
             //Managers.Display.camTransform.position = Vector3.zero;
-            Managers.Display.camTransform.position = new Vector3(3.75f, 2.5f, 0);
+            Managers.Display.CamTransform.position = new Vector3(3.75f, 2.5f, 0);
 
 
             //Managers.Game.IsPlaying = false;

@@ -5,8 +5,8 @@ using System.Collections;
 public class ScreenManager : MonoBehaviour
 {
     public Camera MainCamera        ;
-    public Transform camTransform;
-    public CameraScrolling  cameraScroll ;   
+    public Transform CamTransform;
+    public CameraScrolling  CameraScroll ;   
 
     GUISkin   gSkin                 = null;
     GUISkin   gSkinB                = null;
@@ -82,8 +82,8 @@ public Texture2D FlashTex           = null;                          // Scene Ra
             Debug.Log("Warning, Main Camera not setup");
         else
         {
-            camTransform = MainCamera.transform;
-            cameraScroll = MainCamera.gameObject.GetComponent<CameraScrolling>();
+            CamTransform = MainCamera.transform;
+            CameraScroll = MainCamera.gameObject.GetComponent<CameraScrolling>();
         }
 
         //Camera.main.transparencySortMode = TransparencySortMode.Orthographic;

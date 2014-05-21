@@ -22,7 +22,7 @@ public class CameraBounds : MonoBehaviour
     {
         if (hit.tag == "Player")
         {
-            Managers.Display.cameraScroll.ResetViewArea(AreaBounds);
+            Managers.Display.CameraScroll.ResetViewArea(AreaBounds);
             hit.GetComponent<CameraTargetAttributes>().Offset = Offset;
             hit.GetComponent<CameraTargetAttributes>().distanceModifier = ZoomFactor;
         }
@@ -32,7 +32,7 @@ public class CameraBounds : MonoBehaviour
     {
         if (hit.tag == "Player")
         {
-            Managers.Display.cameraScroll.ResetViewArea();
+            Managers.Display.CameraScroll.ResetViewArea();
             hit.GetComponent<CameraTargetAttributes>().Offset = Vector2.zero;
             hit.GetComponent<CameraTargetAttributes>().distanceModifier = 2.5f;
         }

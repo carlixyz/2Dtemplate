@@ -8,7 +8,8 @@ public class StartState : InGameState
 		Managers.Game.IsPaused = false;
 		Managers.Game.IsPlaying = true;
 
-		Managers.Tiled.Load("/Levels/DemoLevel.tmx");
+		Managers.Game.LoadMap("/Levels/DemoLevel.tmx");
+//		Managers.Tiled.Load("/Levels/DemoLevel.tmx");
         base.Init();
     }
 
@@ -17,7 +18,8 @@ public class StartState : InGameState
 		Managers.Game.IsPaused = true;
 		Managers.Game.IsPlaying = false;
 
-		Managers.Tiled.Unload ();
+		Managers.Game.UnloadMap ();
+//		Managers.Tiled.Unload ();
         base.DeInit();
     }
 

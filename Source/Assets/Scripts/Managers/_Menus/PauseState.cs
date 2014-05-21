@@ -9,7 +9,7 @@ public class PauseState : GameState
     public override void Init()
     {
         Managers.Game.IsPaused = true;
-        Managers.Audio.Play(Pip, Managers.Display.camTransform);
+        Managers.Audio.Play(Pip, Managers.Display.CamTransform);
 
             Time.timeScale = 0.00000000000001f;
             //(player.GetComponent<PlayerControls>() as PlayerControls).enabled = false;
@@ -30,7 +30,7 @@ public class PauseState : GameState
 
         //(player.GetComponent<PlayerControls>()as PlayerControls).enabled = true;
         AudioListener.pause = Managers.Game.IsPaused;
-        Managers.Audio.Play(Pip, Managers.Display.camTransform);
+        Managers.Audio.Play(Pip, Managers.Display.CamTransform);
 
 
         //        if ( Managers.Audio.SoundEnable )

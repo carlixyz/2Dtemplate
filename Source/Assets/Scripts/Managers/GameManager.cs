@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
+using System.IO;
+using System;
+using System.Text;
+using Ionic.Zlib;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,12 +22,16 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+//		Managers.Display.MainCamera = Camera.main;
+//		Managers.Display.CamTransform = Camera.main.transform;
+
         PushState(typeof(IntroState)); // Loading some State
-//        PushState(typeof(MainMenuState)); // A Starting ShortCut to menu
     }
 
     void OnApplicationQuit() 	// "DeInit()"
     {
+		UnloadMap();
+		
         // cleanup the all states
         while (states.Count > 0)
         {
@@ -46,20 +55,6 @@ public class GameManager : MonoBehaviour
 
         if (states.Count > 0)
             states[states.Count - 1].OnUpdate();
-
-
-        //if (Input.GetKeyDown("t"))
-        //    Managers.Game.PushState(typeof(ScoreInput));
-
-
-        //if (IsPlaying)
-        //{
-        //    Managers.Register.TimeDemo -= Time.deltaTime;
-
-
-        //    if (Managers.Register.TimeDemo <= 0)
-        //        Managers.Game.GameOver();
-        //}
     }
 
     public void Render()
@@ -68,47 +63,39 @@ public class GameManager : MonoBehaviour
             states[states.Count - 1].OnRender();
     }
 
-    public void ChangeState(System.Type newStateType)		// Swap two states
+    public void ChangeState(System.Type newStateType)						// Swap two states
     {
-        // if not Empty CleanUp current State
-        if (states.Count > 0)
+        
+		if (states.Count > 0)												// if not Empty CleanUp current State				
         {
             states[states.Count - 1].DeInit();
             states.RemoveAt(states.Count - 1);
         }
 
-        //Managers.Display.ShowSynth( 0.05f);	
-
-        // store and init the new state
-        states.Add(GetComponentInChildren(newStateType) as GameState);
+		states.Add(GetComponentInChildren(newStateType) as GameState);		// store and init the new state		
         states[states.Count - 1].Init();
     }
 
-    public void PushState(System.Type newStateType)		// Hold back previous states
+    public void PushState(System.Type newStateType)							// Hold back previous states
     {
-        // pause current state
+        
         if (states.Count > 0)
-            states[states.Count - 1].Pause();
+			states[states.Count - 1].Pause();								// pause current state				
 
-
-        // store and init the new state
-        states.Add(GetComponentInChildren(newStateType) as GameState);
+        states.Add(GetComponentInChildren(newStateType) as GameState); 		// store and init the new state
         states[states.Count - 1].Init();
     }
 
     public void PopState()
     {
-        // cleanup the current state
-        if (states.Count > 0)
+
+		if (states.Count > 0)			        							// cleanup the current state
         {
             states[states.Count - 1].DeInit();
             states.RemoveAt(states.Count - 1);
         }
 
-        //Managers.Display.ShowSynth( 0.05f);	
-
-        // resume previous state
-        if (states.Count > 0)
+		if (states.Count > 0)												// resume previous state	
             states[states.Count - 1].Resume();
     }
 
@@ -118,16 +105,104 @@ public class GameManager : MonoBehaviour
 
         //if (Managers.Game.State ==  Managers.Game.GetComponentInChildren< ExampleState >()  ) // Metodo para chequear 
         //    Debug.Log("Si, Soy el estado que estás buscando!");
-        //    Debug.Log(" y aqui accedes a un dato del Estato:" + (( ExampleState )Managers.Game.State).PublicData);
+        //    Debug.Log(" y aqui accedes a un dato del Estado:" + (( ExampleState )Managers.Game.State).PublicData);
     }
     
     //////////////////////////////////////////////////////////////
 
-    public void DeInit() { ;}
+
+    
+	public bool LoadMap(string filePath)
+	{
+		//Debug.Log(Application.dataPath + filePath);
+		if (Managers.Tiled.MapTransform != null) 
+		{
+			Debug.LogWarning ("To create a new Map Unload previous one first");
+			return false;
+		} 
+		
+		if (!File.Exists (Application.dataPath + filePath)) 
+		{
+			Debug.LogWarning ("Couldn't Load the TileMap, File Don't Exists!");
+			return false;
+		} 
+		
+		string fileName = filePath.Remove (0, filePath.LastIndexOf ("/") + 1);			    // quit folder path structure
+		fileName = fileName.Remove (fileName.LastIndexOf ("."));							    // quit .tmx or .xml extension
+		
+		StreamReader sr = File.OpenText (Application.dataPath + filePath);				    // Do Stream Read
+		XmlDocument Doc = new XmlDocument ();
+		
+		Doc.LoadXml (sr.ReadToEnd ());                                                       // and Read XML
+		sr.Close ();
+		
+		// CHECK IT'S A TMX FILE FROM TILED	
+		if (Doc.DocumentElement.Name == "map") 												// Access root Map	
+		{												
+			Managers.Register.currentLevelFile = filePath;
+
+			if (Doc.DocumentElement.FirstChild.Name == "properties")
+				foreach (XmlNode MapProperty in Doc.DocumentElement.FirstChild) 
+				{
+					if(MapProperty.Attributes ["name"].Value.ToLower () == "music")
+						Managers.Audio.PlayMusic ((AudioClip)Resources.Load ("Sound/" + MapProperty.Attributes ["value"].Value, typeof(AudioClip)), .45f, 1);
+					
+					if(MapProperty.Attributes ["name"].Value.ToLower () == "zoom")
+						Managers.Register.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
+				}
+
+
+			////////////////////////////////////////////////////////////////////////////////
+			/// 
+		
+			Managers.Tiled.Load(Doc.DocumentElement);
+			Managers.Tiled.MapTransform.gameObject.name = fileName;
+
+			Managers.Objects.Load(Doc.GetElementsByTagName("objectgroup"));
+
+			Managers.Scroll.Load(Doc.GetElementsByTagName("imagelayer"));
+			
+			Debug.Log ("Tiled Level Build Finished: " + fileName);
+
+
+			return true;
+		} 
+		
+		Debug.LogError (fileName + " it's not a Tiled File!, wrong load at: " + filePath);
+		return false;
+	}
+
+
+	public void UnloadMap()
+	{
+		StopAllCoroutines();
+		
+//		if ( PlayerTransform != null )
+//		{
+//			if (Managers.Register.Player)
+//				Destroy(Managers.Register.Player);
+//			PlayerTransform = null;
+//		}
+		
+		Managers.Audio.StopMusic();
+		Managers.Display.CameraScroll.ResetBounds();
+		
+		Managers.Tiled.Unload ();
+		Managers.Scroll.Unload ();
+		Managers.Objects.Unload ();
+
+		Managers.Register.currentLevelFile = string.Empty;
+	}
+
+
+
+
+
+
     //////////////////////////////////////////////////////////////
 
-    bool ToggleUp = true;
-    public bool InputUp                             // This it's a little oneShot Up Axis check for doors & like   
+	static bool ToggleUp = true;
+    public bool InputUp                            						// This it's a little oneShot Up Axis check for doors & like   
     {
         get
         {
@@ -143,12 +218,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool ToggleDown = true;
-    public bool InputDown                             // This it's a little oneShot Down Axis check for doors & like   
+	static bool ToggleDown = true;
+    public bool InputDown                             					// This it's a little oneShot Down Axis check for doors & like   
     {
         get
         {
-            if (Input.GetAxisRaw("Vertical") != -1)                      // It's like an "Input.GetAxisDown" 
+            if (Input.GetAxisRaw("Vertical") != -1)                     // It's like an "Input.GetAxisDown" 
                 ToggleDown = true;
 
             if (ToggleDown && Input.GetAxisRaw("Vertical") <= -1)
@@ -160,12 +235,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool ToggleLeft = true;
-    public bool InputLeft                             // This it's a little oneShot Left Axis check for doors & like   
+	static bool ToggleLeft = true;
+    public bool InputLeft                             					// This it's a little oneShot Left Axis check for doors & like   
     {
         get
         {
-            if (Input.GetAxisRaw("Horizontal") != -1)                      // It's like an "Input.GetAxisDown" 
+            if (Input.GetAxisRaw("Horizontal") != -1)                   // It's like an "Input.GetAxisDown" 
                 ToggleLeft = true;
 
             if (ToggleLeft && Input.GetAxisRaw("Horizontal") <= -1)
@@ -177,12 +252,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool ToggleRight = true;
-    public bool InputRight                             // This it's a little oneShot RIght Axis check for doors & like   
+	static bool ToggleRight = true;
+    public bool InputRight                             					// This it's a little oneShot RIght Axis check for doors & like   
     {
         get
         {
-            if (Input.GetAxisRaw("Horizontal") != 1)                      // It's like an "Input.GetAxisDown" 
+            if (Input.GetAxisRaw("Horizontal") != 1)                    // It's like an "Input.GetAxisDown" 
                 ToggleRight = true;
 
             if (ToggleRight && Input.GetAxisRaw("Horizontal") >= 1)

@@ -67,8 +67,10 @@
      <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
      <Compile Include="Assets\Scripts\Managers\LevelAttributes.cs" />
      <Compile Include="Assets\Scripts\Managers\Managers.cs" />
+     <Compile Include="Assets\Scripts\Managers\ObjManager.cs" />
      <Compile Include="Assets\Scripts\Managers\ScreenManager.cs" />
      <Compile Include="Assets\Scripts\Managers\ScrollLayer.cs" />
+     <Compile Include="Assets\Scripts\Managers\ScrollManager.cs" />
      <Compile Include="Assets\Scripts\Managers\TileManager.cs" />
      <Compile Include="Assets\Scripts\Managers\_Menus\CompletedState.cs" />
      <Compile Include="Assets\Scripts\Managers\_Menus\ControlMenuState.cs" />
@@ -107,7 +109,6 @@
      <Compile Include="Assets\Scripts\characters\_Behaviours\EntityAI.cs" />
      <Compile Include="Assets\Scripts\characters\_Behaviours\GauchoSearch.cs" />
      <Compile Include="Assets\Scripts\characters\_Behaviours\GauchoSleep.cs" />
-     <Compile Include="Assets\ScrollManager.cs" />
      <None Include="Assets\Resources\GUI\Conversations\Iguazu.xml" />
      <None Include="Assets\Resources\GUI\Conversations\Monte.xml" />
      <None Include="Assets\Scripts\Shaders\IntroScroll.shader" />

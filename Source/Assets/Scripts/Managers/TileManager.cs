@@ -31,140 +31,67 @@ public class TileManager : MonoBehaviour
     uint FlippedDiagonallyFlag      		= 0x20000000;
 
     public Vector3 TileOutputSize           = new Vector3(1, 1, 0);			        // scrollLayer Poligonal Modulation inside Unity(Plane)
-    public Vector2 eps                      = new Vector2(0.000005f, 0.000005f);	// epsilon to fix some Texture bleeding
+	public Vector2 eps                      = new Vector2(0.000005f, 0.000005f);	// epsilon to fix some Texture bleeding	// 5e-06
     public bool CombineMesh                 = true;
 
     int LastUsedMat = 0;
     List<cTileSet> TileSets = new List<cTileSet>();
 
-
-
 	public Transform MapTransform;
-    public Transform PlayerTransform;
-    public Transform CamTransform;
 
     //----------------------------------------------------------------------------------------//
 
-    public bool Load( string filePath )
-    {
-        CamTransform = Managers.Display.MainCamera.transform;
-        //Debug.Log(Application.dataPath + filePath);
-        if (MapTransform != null) 
-		{
-			Debug.LogWarning ("To create a new Map Unload previous one first");
-			return false;
-		} 
-
-		if (!File.Exists (Application.dataPath + filePath)) 
-		{
-			Debug.LogWarning ("Couldn't Load the TileMap, File Don't Exists!");
-			return false;
-		} 
-	
-		string fileName = filePath.Remove (0, filePath.LastIndexOf ("/") + 1);			    // quit folder path structure
-		fileName = fileName.Remove (fileName.LastIndexOf ("."));							    // quit .tmx or .xml extension
-
-		StreamReader sr = File.OpenText (Application.dataPath + filePath);				    // Do Stream Read
-		XmlDocument Doc = new XmlDocument ();
-
-		Doc.LoadXml (sr.ReadToEnd ());                                                       // and Read XML
-		sr.Close ();
-
-		// CHECK IT'S A TMX FILE FROM TILED	
-		if (Doc.DocumentElement.Name == "map") 												// Access root Map	
-		{												
-			Managers.Register.currentLevelFile = filePath;
-			MapTransform = new GameObject (fileName).transform;								// Create inside the editor hierarchy & take map transform cached
-
-			Managers.Display.cameraScroll.ResetBounds (new Rect (0, 0,						// Set Level bounds for camera 
-	    		int.Parse (Doc.DocumentElement.Attributes ["width"].Value) * TileOutputSize.x,
-	    		int.Parse (Doc.DocumentElement.Attributes ["height"].Value) * TileOutputSize.y));
+	public bool Load(XmlElement docElement)
+	{
+		Managers.Tiled.MapTransform = new GameObject ("World").transform;			// Create inside the editor hierarchy & take map transform cached
+		
+		Managers.Display.CameraScroll.ResetBounds (new Rect (0, 0,					// Set Level bounds for camera 
+		                                                     int.Parse (docElement.Attributes ["width"].Value) * TileOutputSize.x,
+		                                                     int.Parse (docElement.Attributes ["height"].Value) * TileOutputSize.y));
+		
+		// SEEK BITMAP SOURCE FILE	 
+		foreach (XmlNode TileSetInfo in docElement.GetElementsByTagName("tileset")) 			// array of the level nodes.
+			TileSets.Add(new cTileSet(TileSetInfo, Managers.Register.currentLevelFile));
 
 
-			// SEEK BITMAP SOURCE FILE	 
-			foreach (XmlNode TileSetInfo in Doc.GetElementsByTagName("tileset")) 			// array of the level nodes.
-				TileSets.Add(new cTileSet(TileSetInfo, filePath));
+//		for (XmlNode Layer = docElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling) 
+//		{
+//			if (Layer.Name == "layer") 
+//				StartCoroutine ( BuildLayer (Layer));
+//		}
 
-	
+		XmlNodeList Layers = docElement.GetElementsByTagName ("layer");
+		int Total = Layers.Count;
 
-			for (XmlNode Layer = Doc.DocumentElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling) 
-			{
-				switch (Layer.Name) 
-				{
-					case "layer":                                                           // TagName: TileSet Layers
-						StartCoroutine (BuildLayer (Layer));
-						break;
-//					case "imagelayer":                                                      // TagName: Image Layers (for scrolling)
-//						StartCoroutine (BuildScrollLayers (Layer, filePath));
-//						break;
-					case "objectgroup":                                                     // TagName: Object Group Layer
-						StartCoroutine (BuildPrefabs (Layer));
-						break;
-				}
-			}
+		for (int index = Total-1; index >= 0; index--) 										// TagName: Reversed TileSet Layers.
+			StartCoroutine ( BuildLayer (Layers.Item (index) ));
+
+//		foreach (XmlNode Layer in docElement.GetElementsByTagName("layer").) 				// TagName: Ordered TileSet Layers. (not work)
+//			StartCoroutine ( BuildLayer (Layer));
 
 
-			if (Doc.DocumentElement.FirstChild.Name == "properties")
-				foreach (XmlNode MapProperty in Doc.DocumentElement.FirstChild) 
-				{
-					if(MapProperty.Attributes ["name"].Value.ToLower () == "music")
-						Managers.Audio.PlayMusic ((AudioClip)Resources.Load ("Sound/" + MapProperty.Attributes ["value"].Value, typeof(AudioClip)), .45f, 1);
-					
-					if(MapProperty.Attributes ["name"].Value.ToLower () == "zoom")
-						Managers.Register.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
-				}
-
-			Managers.Scroll.Init(Doc.GetElementsByTagName("imagelayer"));
-			
-			Debug.Log ("Tiled Level Build Finished: " + fileName);
-			return true;
-		} 
-
-		Debug.LogError (fileName + " it's not a Tiled File!, wrong load at: " + filePath);
-		return false;
-    }
-
+		return true;
+	}
 
     public void Unload()
     {
-        StopAllCoroutines();
-
         if ( MapTransform == null ) 
             return;
-                
-        if ( PlayerTransform != null )
-        {
-            if (Managers.Register.Player)
-				Destroy(Managers.Register.Player);
-            PlayerTransform = null;
-        }
-
-        Managers.Audio.StopMusic();
+ 
         TileSets.Clear();
         LastUsedMat = 0;
 
         TileOutputSize = new Vector3(1, 1, 0);			         
         CombineMesh = true;
 
-        Managers.Display.cameraScroll.ResetBounds();
-
         if ( MapTransform != null )
         {
             Destroy(MapTransform.gameObject);
             MapTransform = null;
         }
-
-		Managers.Scroll.Deinit ();
-		Managers.Register.currentLevelFile = string.Empty;
     }
 
-
-    void OnApplicationQuit() 	
-    {
-        Unload();
-    }
-
-    //----------------------------------------------------------------------------------------//
+	    //----------------------------------------------------------------------------------------//
 
     IEnumerator BuildLayer(XmlNode LayerInfo)
     {
@@ -372,206 +299,9 @@ public class TileManager : MonoBehaviour
 			}
     	}
     return null;
-    }                                                                                                       // End of BuidTile Function
-    //----------------------------------------------------------------------------------------//
-
-    public IEnumerator BuildPrefabs(XmlNode ObjectsGroup)
-    {
-        int height = int.Parse(ObjectsGroup.ParentNode.Attributes["height"].Value);
-        int tilewidth = int.Parse(ObjectsGroup.ParentNode.Attributes["tilewidth"].Value);
-        int tileheight = int.Parse(ObjectsGroup.ParentNode.Attributes["tileheight"].Value);
-        GameObject ObjGroup = new GameObject(ObjectsGroup.Attributes["name"].Value);
-        Transform GrpTransform = ObjGroup.transform;
-        GrpTransform.parent = MapTransform;
-
-        //if (ObjectsGroup.Attributes["type"] != null)
-        //    Debug.Log("Obj Null Type: "+ ObjectsGroup.Attributes["type"].Value);           // Get complete Obj Layer Props.
-
-        foreach (XmlNode ObjInfo in ObjectsGroup.ChildNodes)
-        {
-            string ObjName;
-
-             if ( ObjInfo.Attributes["type"] != null)
-                 ObjName = ObjInfo.Attributes["type"].Value.ToLower();                      // Check type match
-            else if ( ObjInfo.Attributes["name"] != null )
-                 ObjName = ObjInfo.Attributes["name"].Value.ToLower();                      // else take it's name as type
-            else 
-                continue;                                                                   // else discard object
-
-            if ( Resources.Load( "Prefabs/" + ObjName, typeof(GameObject) ) )                
-            {
-                GameObject ObjPrefab =(GameObject)Instantiate( Resources.Load( "Prefabs/" + ObjName , typeof(GameObject)));
-
-                Transform ObjTransform = ObjPrefab.transform;
-                ObjTransform.position = new Vector3(
-                    (float.Parse(ObjInfo.Attributes["x"].Value) / tilewidth) + (ObjTransform.localScale.x * .5f),        // X
-                    height - (float.Parse(ObjInfo.Attributes["y"].Value) / tileheight - ObjTransform.localScale.y * .5f),// Y		 		     
-                                                                                         MapTransform.position.z);		 // Z
-                
-                if (ObjInfo.Attributes["gid"] == null)                          //  If not a gid it's a Trigger Volume (Great)
-                {
-                    ObjTransform.localScale = new Vector3(  float.Parse(ObjInfo.Attributes["width"].Value)/tilewidth,
-                                                            float.Parse(ObjInfo.Attributes["height"].Value)/tileheight, 1 )  ;
-                
-                     ObjTransform.position += new Vector3(  (ObjTransform.localScale.x * .5f) - .5f,
-                                                            -(ObjTransform.localScale.y * .5f + .5f), 
-                                                             MapTransform.position.z );                // Model your own space!
-                }
-
-
-                ObjTransform.name = ObjName.Remove(0, ObjName.LastIndexOf("/") + 1);
-                ObjTransform.parent = GrpTransform;
-
-#region OBJS PROPS
-
-                switch (ObjName.ToLower())
-                {
-                    case "pombero":
-                        {
-							Managers.Register.Player = ObjPrefab;
-							Managers.Register.PlayerTransform = ObjPrefab.transform;
-							Managers.Display.cameraScroll.SetTarget( Managers.Register.PlayerTransform, false );
-							PlayerTransform = Managers.Register.PlayerTransform;
-                            //Debug.Log("setting up position in TileManager");
-                            Managers.Register.SetPlayerPos();
-
-                            foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
-                            {
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "zoom" )
-                                    ((CameraTargetAttributes)ObjPrefab.GetComponent<CameraTargetAttributes>()).distanceModifier = 
-                                           float.Parse(ObjProp.Attributes["value"].Value.ToLower());
-
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "offset" )
-                                    ((CameraTargetAttributes)ObjPrefab.GetComponent<CameraTargetAttributes>()).Offset = 
-                                           ReadVector( ObjProp.Attributes["value"].Value.ToLower(), 0);
-                            }
-                        }
-                        break;
-                    case "door":
-                        goto case "warp";
-                    case "warp":
-                        {
-                            Portal portal = (Portal)ObjPrefab.GetComponent<Portal>();
-                            portal.SetType( (Portal.type)Enum.Parse( typeof(Portal.type), ObjName));
-
-                            if ( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0) != null )
-                                portal.SetTarget( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0).Attributes["value"].Value);
-                            
-                            portal.SetId( ( ObjInfo.Attributes["name"] != null ? ObjInfo.Attributes["name"].Value : ObjName ) );
-                        }
-                        break;
-
-                    case "flyPlatformA":
-                        goto case "flyPlatform";
-                    case "flyPlatformB":
-                        goto case "flyPlatform";
-                    case "flyPlatform":
-                        {
-                        PlatformMove platform = (PlatformMove)ObjPrefab.GetComponent<PlatformMove>();
-                    
-                            foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
-                            {
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "target" )
-                                {
-                                    var target = ReadVector(ObjProp.Attributes["value"].Value, 0);
-                                    platform.EndPosition = target;
-                                }
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "speed" )
-                                    platform.Speed = float.Parse( ObjProp.Attributes["value"].Value );
-                            }
-                        }
-                        break;
-
-                    case "chat":
-                        {
-                            Conversation chat = (Conversation)ObjPrefab.GetComponent<Conversation>();
-                            
-                            foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
-                            {
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "file" )
-                                   chat.ConversationFile = (TextAsset)Resources.Load( ObjProp.Attributes["value"].Value, typeof(TextAsset));
-                               
-                                if ( ObjProp.Attributes["name"].Value.ToLower() == "oneshotid" ) 
-                                {
-                                    chat.OneShot = true;
-                                    chat.oneShotId = ObjProp.Attributes["value"].Value;
-                                    //chat.NameId = chat.oneShotId ;
-                                }
-
-                                if ( ObjProp.Attributes["name"].Value.ToLower() == "sound" ) 
-                                {
-                                    chat.soundChat = (AudioClip)Resources.Load( ObjProp.Attributes["value"].Value, typeof(AudioClip));
-                                }
-
-                                if ( ObjProp.Attributes["name"].Value.ToLower() == "nameid" ) 
-                                    chat.NameId = ObjProp.Attributes["value"].Value;
-
-                                if ( ObjProp.Attributes["name"].Value.ToLower() == "zoom" ) 
-                                    chat.zoom = float.Parse(ObjProp.Attributes["value"].Value);
-                                //Managers.Dialog.Init(chat.ConversationFile);
-                            }
-                                Debug.Log("Deploying Conversation");
-                        }
-                        break;
-
-                    case "camerabound":
-                        {
-                            foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
-                            {
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "zoom" )
-                                       ((CameraBounds)ObjPrefab.GetComponent<CameraBounds>()).ZoomFactor = 
-                                           float.Parse(ObjProp.Attributes["value"].Value);
-
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "offset" )
-                                    ((CameraBounds)ObjPrefab.GetComponent<CameraBounds>()).Offset = 
-                                           ReadVector( ObjProp.Attributes["value"].Value, 0);
-                            }
-                        }
-                        break;
-
-                    default:
-                            foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
-                            {
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "depth" )
-                                    ObjPrefab.transform.position += Vector3.forward * 
-                                           float.Parse(ObjProp.Attributes["value"].Value);
-                                  
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "rotation" )
-                                    ObjPrefab.transform.localRotation =  Quaternion.Euler( new Vector3( 0, 0,
-                                        float.Parse(ObjProp.Attributes["value"].Value)  ) );
-
-                                if (ObjProp.Attributes["name"].Value.ToLower() == "scale" )
-                                {
-                                    ObjPrefab.transform.localScale = ReadVector(ObjProp.Attributes["value"].Value) ;
-                                    ObjPrefab.transform.localScale += Vector3.forward;
-                                }
-
-                            }
-                        break;
-                }
-
-#endregion
-
-            }
-            else Debug.LogWarning("Object '" + ObjName + "' Was not found at: " + "Resources/Prefabs/");
-
-            yield return 0;
-        }
     }
 
-    //----------------------------------------------------------------------------------------//
-
-	private Vector2 ReadVector(string input, float equalAxis = 1) // equalAxis sets value for both axis in case of found only 1 value                                                     
-	{                                                                                   // seek float values inside string
-		if (input.Contains(","))                                                        // if there's a comma, separate things
-		{
-			return new Vector2( float.Parse( input.Remove( input.IndexOf(",") )),
-			                   float.Parse( input.Remove(0, input.IndexOf(",") + 1) ));
-		}
-		// else set just the X Axis 
-		return new Vector2( float.Parse(input), equalAxis * float.Parse(input));            // or both if 'AxisY' is enabled    
-	}
-
+																							// End of BuidTile Function
     //----------------------------------------------------------------------------------------//
 
 }
