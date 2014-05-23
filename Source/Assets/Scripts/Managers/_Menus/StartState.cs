@@ -11,6 +11,7 @@ public class StartState : InGameState
 		Managers.Game.LoadMap("/Levels/DemoLevel.tmx");
 //		Managers.Tiled.Load("/Levels/DemoLevel.tmx");
         base.Init();
+
     }
 
     public override void DeInit()

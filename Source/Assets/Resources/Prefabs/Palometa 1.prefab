@@ -98,17 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf1c87cca5b097478a46fee4e7e3f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: .5
-  AttackSpeed: 1
-  orientation: 1
-  attackRange: 1
-  searchRange: 3
-  homeRange: .5
-  deathForce: 7
-  gizmoToggle: 1
-  HoldedPosition: {x: 0, y: .300000012, z: -.100000001}
-  OnWater: 0
-  OnGround: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

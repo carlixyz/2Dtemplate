@@ -17,6 +17,14 @@ Mesh:
     localAABB:
       m_Center: {x: 0, y: 0, z: .00999999978}
       m_Extent: {x: .5, y: .5, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
   m_MeshCompression: 0
   m_StreamCompression: 0
   m_IsReadable: 1
@@ -24,7 +32,6 @@ Mesh:
   m_KeepIndices: 1
   m_IndexBuffer: 000001000200000002000300
   m_Skin: []
-  m_BindPose: []
   m_VertexData:
     m_CurrentChannels: 31
     m_VertexCount: 4

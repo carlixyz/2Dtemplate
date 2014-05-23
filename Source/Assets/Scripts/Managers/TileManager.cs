@@ -33,15 +33,18 @@ public class TileManager : MonoBehaviour
     public bool CombineMesh                 = true;
 
     int LastUsedMat = 0;
-    List<cTileSet> TileSets = new List<cTileSet>();
+	List<cTileSet> TileSets = new List<cTileSet>();
 
 	public Transform MapTransform;
 
     //----------------------------------------------------------------------------------------//
-
-	public bool Load(XmlElement docElement)
+	
+	public void Setup(XmlElement docElement, string mapName )
 	{
-		Managers.Tiled.MapTransform = new GameObject ("World").transform;			// Create inside the editor hierarchy & take map transform cached
+		if (MapTransform)
+			return ;
+
+		MapTransform = new GameObject (mapName).transform;			// Create inside the editor hierarchy & take map transform cached
 		
 		Managers.Display.CameraScroll.ResetBounds (new Rect (0, 0,					// Set Level bounds for camera 
 		                                                     int.Parse (docElement.Attributes ["width"].Value) * TileOutputSize.x,
@@ -50,23 +53,11 @@ public class TileManager : MonoBehaviour
 		// SEEK BITMAP SOURCE FILE	 
 		foreach (XmlNode TileSetInfo in docElement.GetElementsByTagName("tileset")) 			// array of the level nodes.
 			TileSets.Add(new cTileSet(TileSetInfo, Managers.Register.currentLevelFile));
+	}
 
-
-//		for (XmlNode Layer = docElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling) 
-//		{
-//			if (Layer.Name == "layer") 
-//				StartCoroutine ( BuildLayer (Layer));
-//		}
-
-		XmlNodeList Layers = docElement.GetElementsByTagName ("layer");
-
-		for (int index = Layers.Count-1; index >= 0; index--) 									// TagName: Reversed TileSet Layers.
-			StartCoroutine ( BuildLayer (Layers.Item (index) ));
-
-//		foreach (XmlNode Layer in docElement.GetElementsByTagName("layer").) 					// TagName: Ordered TileSet Layers. (not work)
-//			StartCoroutine ( BuildLayer (Layer));
-
-		return true;
+	public void Load(XmlNode layer)	// Previously Iterated
+	{
+		StartCoroutine ( BuildLayer (layer ));
 	}
 
     public void Unload()
@@ -89,7 +80,7 @@ public class TileManager : MonoBehaviour
 
 	    //----------------------------------------------------------------------------------------//
 
-    IEnumerator BuildLayer(XmlNode LayerInfo)
+    public IEnumerator BuildLayer(XmlNode LayerInfo)
     {
         GameObject Layer = new GameObject(LayerInfo.Attributes["name"].Value); // add Layer Childs inside hierarchy.
 

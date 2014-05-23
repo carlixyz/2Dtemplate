@@ -16,26 +16,39 @@ using System.Xml;
 
 public class ScrollManager : MonoBehaviour 
 {
-	Vector3 oldPos;
-	Vector3 scrollValue;
+	public Vector3 oldPos;
+	public Vector3 scrollValue;
 	
 	public float  ScrollBaseSpeed = 1;
-	ScrollLayer[] ScrollLayers;
+	public ScrollLayer[] ScrollLayers;
 
-	Transform CamTransform;
+	public Transform CamTransform;
 //	Transform PlayerTransform;
+
+	void Start()
+	{
+		CamTransform = Managers.Display.CamTransform;
+	}
+
+	public void Load(XmlNode scrollLayer) 
+	{
+		if (CamTransform == null)
+			CamTransform = Managers.Display.CamTransform;
+		
+		StartCoroutine ( BuildScrollLayers (scrollLayer));
+
+//		SetupScroll ();
+	}
 
 	public void Load(XmlNodeList scrollLayers) 
 	{
-		CamTransform = Managers.Display.CamTransform;
+		if (CamTransform == null)
+			CamTransform = Managers.Display.CamTransform;
 
 		for (int index = scrollLayers.Count-1; index >= 0; index--) 										// TagName: Reversed TileSet Layers.
-			StartCoroutine ( BuildScrollLayers (scrollLayers.Item (index), Managers.Register.currentLevelFile));
+			StartCoroutine ( BuildScrollLayers (scrollLayers.Item (index)));
 
-//		foreach(XmlNode imgLayer in scrollLayers)
-//			StartCoroutine (BuildScrollLayers (imgLayer, Managers.Register.currentLevelFile));
-
-		SetupScroll ();
+//		SetupScroll ();
 	}
 
 	public void Unload() 
@@ -52,7 +65,7 @@ public class ScrollManager : MonoBehaviour
 		ScrollLayers = null;
 	}
 
-	public IEnumerator BuildScrollLayers(XmlNode LayerInfo, string FilePath)
+	public IEnumerator BuildScrollLayers(XmlNode LayerInfo)
 	{
 		if (!Camera.main)
 			yield break;
@@ -141,7 +154,10 @@ public class ScrollManager : MonoBehaviour
 		
 		#else
 		// Add textures
-		WWW www = new WWW( "file://" + Application.dataPath + FilePath.Remove(FilePath.LastIndexOf("/") + 1) + LayerInfo.FirstChild.Attributes["source"].Value);
+		WWW www = new WWW( "file://" 
+		                  + Application.dataPath 
+		                  + Managers.Register.currentLevelFile.Remove(Managers.Register.currentLevelFile.LastIndexOf("/") + 1)
+		                  + LayerInfo.FirstChild.Attributes["source"].Value );
 		Texture2D tex = www.texture;
 		
 		#endif
@@ -155,14 +171,11 @@ public class ScrollManager : MonoBehaviour
 		scroll.UpdateLayer();
 		
 		///////////////////////////////////////////////////////////////////////
-		
-		//if ( HackSize )
-		
 		yield return 0;
 	}
 	
 	
-	void SetupScroll()
+	public void SetupScroll()
 	{
 		List<ScrollLayer> scrollList = new List<ScrollLayer>(FindObjectsOfType(typeof(ScrollLayer)) as ScrollLayer[]);
 		
@@ -189,29 +202,21 @@ public class ScrollManager : MonoBehaviour
 			scrollLayer.UpdateLayer(true, false, false);
 		}
 	}
+
+
 	
 	void LateUpdate()		// only for scroll Layers
 	{
 		if ( ScrollLayers == null) return;
 		
 		UpdateScroll();
-		//if ( PlayerTransform )
-		//{
-		//scrollValue = PlayerTransform.position - oldPos;
-		//oldPos = PlayerTransform.position;
-		
 		scrollValue = CamTransform.position - oldPos;
 		oldPos = CamTransform.position;
-		//}
 		
 		foreach (ScrollLayer scrollLayer in ScrollLayers)
 		{
 			if (!scrollLayer)
 				continue;
-			
-			//if (PlayerTransform)
-			//    scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > PlayerTransform.position.y &&
-			//        scrollLayer.range.x < PlayerTransform.position.y ) );
 			
 			if ( Managers.Objects.PlayerTransform )
 				scrollLayer.gameObject.SetActive( ( scrollLayer.range.y > Managers.Display.MainCamera.transform.position.y &&
@@ -237,8 +242,6 @@ public class ScrollManager : MonoBehaviour
 				}
 			}
 		}
-		//if ( PlayerTransform )
-		//    oldPos = PlayerTransform.position;
 	}
 	
 	private Vector2 ReadVector(string input, float equalAxis = 1) // AxisY sets value for both axis in case of found only 1 value                                                     

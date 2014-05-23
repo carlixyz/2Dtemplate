@@ -246,9 +246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a39e648096a55e04b833e48ab446ad0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RowSize: 8
-  ColumnSize: 8
-  framesPerSecond: 8
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

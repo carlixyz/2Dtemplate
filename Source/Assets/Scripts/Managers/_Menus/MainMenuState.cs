@@ -7,7 +7,7 @@ public class MainMenuState : GameState
 {
 //	public Texture2D BackText
 	public GameObject Background;
-	GameObject IntroPrefab;
+	GameObject BackPrefab;
 
 	public GameObject Title;
 	GameObject TitlePrefab;
@@ -37,13 +37,15 @@ public class MainMenuState : GameState
     public override void Init()
     {
 //        IntroPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/Intro/IntroPrefab", typeof(GameObject)) );
-		IntroPrefab = (GameObject)Instantiate(Background, transform.position, transform.rotation);			// Background Instantiation
-		IntroPrefab.transform.localScale = Vector3.one;
+		Managers.Display.CamTransform.position = new Vector3(3.75f, 2.5f, -2.5f);
 
-		Vector2 BackSize = IntroPrefab.GetComponent<SpriteRenderer> ().sprite.bounds.size;
+		BackPrefab = (GameObject)Instantiate(Background, Managers.Display.CamTransform.position, transform.rotation);			// Background Instantiation
+		BackPrefab.transform.localScale = Vector3.one;
+
+		Vector2 BackSize = BackPrefab.GetComponent<SpriteRenderer> ().sprite.bounds.size;
 		Vector2 ScreenSize = new Vector2( Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2 / Screen.height * Screen.width);
 
-		IntroPrefab.transform.localScale = new Vector2(ScreenSize.y / BackSize.x, ScreenSize.x / BackSize.y);
+		BackPrefab.transform.localScale = new Vector2(ScreenSize.y / BackSize.x, ScreenSize.x / BackSize.y);
 
 
         timeTrailer = 30;
@@ -77,8 +79,8 @@ public class MainMenuState : GameState
         Managers.Display.MainCamera.enabled = true;
         Managers.Display.MainCamera.tag = "MainCamera";
 
-        DestroyImmediate(IntroPrefab);
-        IntroPrefab = null;
+        DestroyImmediate(BackPrefab);
+        BackPrefab = null;
 
 		DestroyImmediate(TitlePrefab);
 		TitlePrefab = null;

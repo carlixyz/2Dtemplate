@@ -381,7 +381,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.75, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400010}
@@ -433,7 +433,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2.5}
+  m_LocalPosition: {x: 3.75, y: 2.5, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400022}
@@ -513,7 +513,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe8381819c212e41bb6c970b00009b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oldPos: {x: 0, y: 0, z: 0}
+  scrollValue: {x: 0, y: 0, z: 0}
   ScrollBaseSpeed: 1
+  ScrollLayers: []
+  CamTransform: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -540,7 +544,7 @@ MonoBehaviour:
   Title: {fileID: 100000, guid: 82c92e5c46e4b1b458da7357c88cab84, type: 2}
   TitleRect:
     serializedVersion: 2
-    x: 1.39999998
+    x: 1.35000002
     y: 3.0999999
     width: 1.5
     height: 1.5
@@ -804,8 +808,6 @@ MonoBehaviour:
   TotalStages: 20
   currentLevelFile: 
   previousLevelFile: 
-  Player: {fileID: 0}
-  PlayerTransform: {fileID: 0}
   FirstTimePlay: 1
   PlayerAutoRunning: 1
   Stage1: /Levels/Stage1map.tmx
@@ -821,6 +823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dde66719008fc74ab7cf7e74492f5ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjList: []
+  ObjTotal: 0
   Player: {fileID: 0}
   PlayerTransform: {fileID: 0}
 --- !u!114 &11400042

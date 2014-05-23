@@ -18,33 +18,49 @@ using System;
 public class ObjManager : MonoBehaviour 
 {
 
-	public List<GameObject> ObjList;
+	public List<GameObject> ObjList = new List<GameObject>();
 	public int ObjTotal = 0;
 
 	public GameObject Player;
 	public Transform PlayerTransform;
 
-	public bool Load(XmlNodeList Layer)
-	{
-		ObjList = new List<GameObject>();
-
-		foreach (XmlNode ObjGrp in Layer)
-			StartCoroutine (BuildPrefabs (ObjGrp));
-			
-//		ObjList = objectsList.ToArray();
-		return true;
-	}
+//	public bool Load(XmlNodeList Layer)
+//	{
+//		if ( ObjList == null)
+//			ObjList = new List<GameObject>();
+//
+//		foreach (XmlNode ObjGrp in Layer)
+//			StartCoroutine (BuildPrefabs (ObjGrp));
+//			
+////		ObjList = objectsList.ToArray();
+//		return true;
+//	}
+	
+//	public bool LoadObj(XmlNode Layer)
+//	{
+//		if ( ObjList == null)
+//			ObjList = new List<GameObject>();
+//		
+//		StartCoroutine (BuildPrefabs (Layer));
+//		
+//		return true;
+//	}
 	
 	public void Unload()
 	{
+		if ( ObjTotal <= 0)
+			return;
+		
 		ObjTotal = 0;
 		ObjList.Clear ();
+//		ObjList = null;
 
 		if ( PlayerTransform != null )
 		{
 			if (Player)
 				Destroy(Player);
 			PlayerTransform = null;
+			Player = null;
 		}
 	}
 
@@ -73,13 +89,14 @@ public class ObjManager : MonoBehaviour
 			
 			if ( Resources.Load( "Prefabs/" + ObjName, typeof(GameObject) ) )                
 			{
-				GameObject ObjPrefab =(GameObject)Instantiate( Resources.Load( "Prefabs/" + ObjName , typeof(GameObject)));
-				Transform ObjTransform = ObjPrefab.transform;
+				Transform ObjTransform = ((GameObject)Instantiate( Resources.Load( "Prefabs/" + ObjName , typeof(GameObject))) ).transform;
+
+				ObjList.Add( ObjTransform.gameObject );
 
 				ObjTransform.position = new Vector3(
 					(float.Parse(ObjInfo.Attributes["x"].Value) / tilewidth) + (ObjTransform.localScale.x * .5f),        // X
 					height - (float.Parse(ObjInfo.Attributes["y"].Value) / tileheight - ObjTransform.localScale.y * .5f),// Y		 		     
-					Managers.Tiled.MapTransform.position.z);		 // Z
+					Managers.Tiled.MapTransform.position.z);		 													 // Z
 				
 				if (ObjInfo.Attributes["gid"] == null)                          //  If not a gid it's a Trigger Volume (Great)
 				{
@@ -101,8 +118,8 @@ public class ObjManager : MonoBehaviour
 				{
 				case "pombero":
 				{
-					Managers.Objects.Player = ObjPrefab;
-					Managers.Objects.PlayerTransform = ObjPrefab.transform;
+					Managers.Objects.Player = ObjTransform.gameObject;
+					Managers.Objects.PlayerTransform = ObjTransform;
 					Managers.Display.CameraScroll.SetTarget( Managers.Objects.PlayerTransform, false );
 					PlayerTransform = Managers.Objects.PlayerTransform;
 					//Debug.Log("setting up position in TileManager");
@@ -111,11 +128,11 @@ public class ObjManager : MonoBehaviour
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
 						if (ObjProp.Attributes["name"].Value.ToLower() == "zoom" )
-							((CameraTargetAttributes)ObjPrefab.GetComponent<CameraTargetAttributes>()).distanceModifier = 
+							((CameraTargetAttributes)ObjTransform.GetComponent<CameraTargetAttributes>()).distanceModifier = 
 								float.Parse(ObjProp.Attributes["value"].Value.ToLower());
 						
 						if (ObjProp.Attributes["name"].Value.ToLower() == "offset" )
-							((CameraTargetAttributes)ObjPrefab.GetComponent<CameraTargetAttributes>()).Offset = 
+							((CameraTargetAttributes)ObjTransform.GetComponent<CameraTargetAttributes>()).Offset = 
 								ReadVector( ObjProp.Attributes["value"].Value.ToLower(), 0);
 					}
 				}
@@ -124,7 +141,7 @@ public class ObjManager : MonoBehaviour
 					goto case "warp";
 				case "warp":
 				{
-					Portal portal = (Portal)ObjPrefab.GetComponent<Portal>();
+					Portal portal = (Portal)ObjTransform.GetComponent<Portal>();
 					portal.SetType( (Portal.type)Enum.Parse( typeof(Portal.type), ObjName));
 					
 					if ( ((XmlElement)ObjInfo).GetElementsByTagName("property").Item(0) != null )
@@ -140,7 +157,7 @@ public class ObjManager : MonoBehaviour
 					goto case "flyPlatform";
 				case "flyPlatform":
 				{
-					PlatformMove platform = (PlatformMove)ObjPrefab.GetComponent<PlatformMove>();
+					PlatformMove platform = (PlatformMove)ObjTransform.GetComponent<PlatformMove>();
 					
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
@@ -157,7 +174,7 @@ public class ObjManager : MonoBehaviour
 					
 				case "chat":
 				{
-					Conversation chat = (Conversation)ObjPrefab.GetComponent<Conversation>();
+					Conversation chat = (Conversation)ObjTransform.GetComponent<Conversation>();
 					
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
@@ -192,11 +209,11 @@ public class ObjManager : MonoBehaviour
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
 						if (ObjProp.Attributes["name"].Value.ToLower() == "zoom" )
-							((CameraBounds)ObjPrefab.GetComponent<CameraBounds>()).ZoomFactor = 
+							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).ZoomFactor = 
 								float.Parse(ObjProp.Attributes["value"].Value);
 						
 						if (ObjProp.Attributes["name"].Value.ToLower() == "offset" )
-							((CameraBounds)ObjPrefab.GetComponent<CameraBounds>()).Offset = 
+							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).Offset = 
 								ReadVector( ObjProp.Attributes["value"].Value, 0);
 					}
 				}
@@ -206,17 +223,16 @@ public class ObjManager : MonoBehaviour
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
 						if (ObjProp.Attributes["name"].Value.ToLower() == "depth" )
-							ObjPrefab.transform.position += Vector3.forward * 
+							ObjTransform.position += Vector3.forward * 
 								float.Parse(ObjProp.Attributes["value"].Value);
 						
 						if (ObjProp.Attributes["name"].Value.ToLower() == "rotation" )
-							ObjPrefab.transform.localRotation =  Quaternion.Euler( new Vector3( 0, 0,
-							                                                                   float.Parse(ObjProp.Attributes["value"].Value)  ) );
+							ObjTransform.localRotation =  Quaternion.Euler( new Vector3( 0, 0, float.Parse(ObjProp.Attributes["value"].Value)  ) );
 						
 						if (ObjProp.Attributes["name"].Value.ToLower() == "scale" )
 						{
-							ObjPrefab.transform.localScale = ReadVector(ObjProp.Attributes["value"].Value) ;
-							ObjPrefab.transform.localScale += Vector3.forward;
+							ObjTransform.localScale = ReadVector(ObjProp.Attributes["value"].Value) ;
+							ObjTransform.localScale += Vector3.forward;
 						}
 						
 					}
@@ -224,9 +240,7 @@ public class ObjManager : MonoBehaviour
 				}
 				
 				#endregion
-
-				ObjList.Add (ObjPrefab);
-				
+								
 			}
 			else Debug.LogWarning("Object '" + ObjName + "' Was not found at: " + "Resources/Prefabs/");
 

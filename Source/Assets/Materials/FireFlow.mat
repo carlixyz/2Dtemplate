@@ -83,12 +83,12 @@ Material:
         second: .850000024
       data:
         first:
-          name: _KeyY
-        second: .800000012
-      data:
-        first:
           name: _Shininess
         second: .078125
+      data:
+        first:
+          name: _KeyY
+        second: .800000012
       data:
         first:
           name: _SquashAmount

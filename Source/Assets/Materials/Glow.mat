@@ -55,6 +55,14 @@ Material:
         second: .596153855
       data:
         first:
+          name: _Shininess
+        second: .699999988
+      data:
+        first:
+          name: _InvFade
+        second: 1.63250005
+      data:
+        first:
           name: _ScrollX
         second: .100000001
       data:
@@ -81,14 +89,6 @@ Material:
         first:
           name: _ColorIntensity
         second: .5
-      data:
-        first:
-          name: _Shininess
-        second: .699999988
-      data:
-        first:
-          name: _InvFade
-        second: 1.63250005
       data:
         first:
           name: _EmissionLM

@@ -34,31 +34,31 @@ public class DengueFly : MonoBehaviour
     public GameObject ParticleStars;
 
 
-    void Start(){
-	thisTransform = transform;
-    grounded = true;	
-    
-	if ( rigidbody)												// we need a rigidbody somewhere to do sny trigger/collision
+    void Start()
 	{
-    	rigidbody.freezeRotation = true;
-    	rigidbody.useGravity = false;
-    }
+		thisTransform = transform;
+	    grounded = true;	
+	    
+		if ( rigidbody)												// we need a rigidbody somewhere to do sny trigger/collision
+		{
+	    	rigidbody.freezeRotation = true;
+	    	rigidbody.useGravity = false;
+	    }
 
 		if (!target && Managers.Objects.Player)
 			target = Managers.Objects.Player.transform;
-        //target =  GameObject.Find("Pombero").transform;			//	We can Use this system to get the player's Id & position
-	
-	if ( target) 
-	{
+	        //target =  GameObject.Find("Pombero").transform;			//	We can Use this system to get the player's Id & position
+		
+		if ( target) 
+		{
+	        linkToPlayerControls = target.GetComponent<PlayerControls>() as PlayerControls;
+		}else 	print(" Beware Dengue target empty: player link not found!");
+				
+		animPlay = GetComponent<AnimSprite>();
 
-        linkToPlayerControls = target.GetComponent<PlayerControls>() as PlayerControls;
-	}else 	print(" Beware Dengue target empty: player link not found!");
-			
-	animPlay = GetComponent<AnimSprite>();
-
-    orientation = (int)Mathf.Sign( Random.Range(-100,+100) );
-    StartCoroutine(CoUpdate());
-}
+	    orientation = (int)Mathf.Sign( Random.Range(-100,+100) );
+	    StartCoroutine(CoUpdate());
+	}
 
     void OnBecameVisible()
     {

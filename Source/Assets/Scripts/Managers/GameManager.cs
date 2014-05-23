@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     {
         Managers.Register.Health = Mathf.Clamp(Managers.Register.Health, 0, 3);
 
-        if (((Managers.Register.Fruits % 85) == 0) && System.Convert.ToBoolean(Managers.Register.Fruits))
+        if ( ((Managers.Register.Fruits % 85) == 0) && System.Convert.ToBoolean(Managers.Register.Fruits) )
         { 
             ShowState = true;
             Managers.Register.Lifes++;
@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
 
     public void ChangeState(System.Type newStateType)						// Swap two states
     {
-        
 		if (states.Count > 0)												// if not Empty CleanUp current State				
         {
             states[states.Count - 1].DeInit();
@@ -78,7 +77,6 @@ public class GameManager : MonoBehaviour
 
     public void PushState(System.Type newStateType)							// Hold back previous states
     {
-        
         if (states.Count > 0)
 			states[states.Count - 1].Pause();								// pause current state				
 
@@ -88,7 +86,6 @@ public class GameManager : MonoBehaviour
 
     public void PopState()
     {
-
 		if (states.Count > 0)			        							// cleanup the current state
         {
             states[states.Count - 1].DeInit();
@@ -110,70 +107,81 @@ public class GameManager : MonoBehaviour
     
     //////////////////////////////////////////////////////////////
 
-
     
 	public bool LoadMap(string filePath)
 	{
-		//Debug.Log(Application.dataPath + filePath);
-		if (Managers.Tiled.MapTransform != null) 
+		////////////////////////////////////////////////////////// NEW CODE VERSION (TO BE THE BEST ONE...)
+		
+		if (Managers.Tiled.MapTransform != null )
 		{
-			Debug.LogWarning ("To create a new Map Unload previous one first");
+			Debug.LogWarning("To create a new Map Unload previous one first");
 			return false;
-		} 
+		}
 		
-		if (!File.Exists (Application.dataPath + filePath)) 
+		if ( !File.Exists(Application.dataPath + filePath) )
 		{
-			Debug.LogWarning ("Couldn't Load the TileMap, File Don't Exists!");
+			Debug.LogWarning("Couldn't Load the TileMap, File Don't Exists!");
 			return false;
-		} 
+		}
 		
-		string fileName = filePath.Remove (0, filePath.LastIndexOf ("/") + 1);			    // quit folder path structure
-		fileName = fileName.Remove (fileName.LastIndexOf ("."));							    // quit .tmx or .xml extension
+		string fileName = filePath.Remove(0, filePath.LastIndexOf("/") + 1);			    // quit folder path structure
+		fileName = fileName.Remove(fileName.LastIndexOf("."));							    // quit .tmx or .xml extension
 		
-		StreamReader sr = File.OpenText (Application.dataPath + filePath);				    // Do Stream Read
-		XmlDocument Doc = new XmlDocument ();
+		StreamReader sr = File.OpenText(Application.dataPath + filePath);				    // Do Stream Read
+		XmlDocument Doc = new XmlDocument();
 		
-		Doc.LoadXml (sr.ReadToEnd ());                                                       // and Read XML
-		sr.Close ();
-		
-		// CHECK IT'S A TMX FILE FROM TILED	
-		if (Doc.DocumentElement.Name == "map") 												// Access root Map	
-		{												
-			Managers.Register.currentLevelFile = filePath;
+		Doc.LoadXml(sr.ReadToEnd());                                                        // and Read XML
+		sr.Close();
 
-			if (Doc.DocumentElement.FirstChild.Name == "properties")
-				foreach (XmlNode MapProperty in Doc.DocumentElement.FirstChild) 
+		//////////////////////////////////////////////////////////	LEVEL CREATION
+		if (Doc.DocumentElement.Name == "map")												// Access root Map		
+		{
+			Managers.Register.currentLevelFile = filePath ;
+			Managers.Tiled.Setup(Doc.DocumentElement, fileName);
+
+//			if (Managers.Tiled.MapTransform)
+//				return true;
+
+			for (XmlNode Layer = Doc.DocumentElement.LastChild; Layer.Name != "tileset"; Layer = Layer.PreviousSibling)
+			{
+				switch(Layer.Name)
 				{
-					if(MapProperty.Attributes ["name"].Value.ToLower () == "music")
-						Managers.Audio.PlayMusic ((AudioClip)Resources.Load ("Sound/" + MapProperty.Attributes ["value"].Value, typeof(AudioClip)), .45f, 1);
-					
-					if(MapProperty.Attributes ["name"].Value.ToLower () == "zoom")
-						Managers.Objects.Player.GetComponent<CameraTargetAttributes> ().distanceModifier = 3.5f;
+					case "layer":                                                           	// TagName: TileSet Layers
+						StartCoroutine(Managers.Tiled.BuildLayer(Layer));
+						break;
+					case "imagelayer":                                                      	// TagName: Image Layers (for scrolling)
+						StartCoroutine(Managers.Scroll.BuildScrollLayers(Layer));
+						break;
+					case "objectgroup":                                                     	// TagName: Object Group Layer
+						StartCoroutine(Managers.Objects.BuildPrefabs(Layer));
+						break;
 				}
-
-			////////////////////////////////////////////////////////////////////////////////
+			}
+			Managers.Scroll.SetupScroll();
 		
-			Managers.Tiled.Load(Doc.DocumentElement);
-			Managers.Tiled.MapTransform.gameObject.name = fileName;
-
-			Managers.Objects.Load(Doc.GetElementsByTagName("objectgroup"));
-
-			Managers.Scroll.Load(Doc.GetElementsByTagName("imagelayer"));
+			//////////////////////////////////////////////////////////	LEVEL PROPERTIES
 			
-			Debug.Log ("Tiled Level Build Finished: " + fileName);
+			if ( Doc.DocumentElement.FirstChild.Name == "properties" )
+				foreach(XmlNode MapProperty in Doc.DocumentElement.FirstChild )
+			{
+				if (MapProperty.Attributes["name"].Value.ToLower() == "music")
+					Managers.Audio.PlayMusic( (AudioClip)Resources.Load("Sound/" + MapProperty.Attributes["value"].Value, typeof(AudioClip)), .45f, 1);
+				
+				if (MapProperty.Attributes["name"].Value.ToLower() == "zoom")
+					Managers.Objects.Player.GetComponent<CameraTargetAttributes>().distanceModifier = 3.5f;
+			}
+
+//			Debug.Log("Tiled Level Build Finished: "+ fileName);
 			return true;
-		} 
-		
-		Debug.LogError (fileName + " it's not a Tiled File!, wrong load at: " + filePath);
+		}
+
+		Debug.LogError(fileName + " it's not a Tiled File!, wrong load at: "+ filePath);
 		return false;
 	}
-
 
 	public void UnloadMap()
 	{
 		StopAllCoroutines();
-
-		Managers.Audio.StopMusic();
 		Managers.Display.CameraScroll.ResetBounds();
 
 		Managers.Objects.Unload ();
@@ -182,11 +190,6 @@ public class GameManager : MonoBehaviour
 		
 		Managers.Register.currentLevelFile = string.Empty;
 	}
-
-
-
-
-
 
     //////////////////////////////////////////////////////////////
 
