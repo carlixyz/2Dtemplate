@@ -44,7 +44,7 @@ public class TileManager : MonoBehaviour
 		if (MapTransform)
 			return ;
 
-		MapTransform = new GameObject (mapName).transform;			// Create inside the editor hierarchy & take map transform cached
+		MapTransform = new GameObject(mapName).transform;			// Create inside the editor hierarchy & take map transform cached
 		
 		Managers.Display.CameraScroll.ResetBounds (new Rect (0, 0,					// Set Level bounds for camera 
 		                                                     int.Parse (docElement.Attributes ["width"].Value) * TileOutputSize.x,

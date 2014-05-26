@@ -19,38 +19,41 @@ public class ObjManager : MonoBehaviour
 {
 
 	public List<GameObject> ObjList = new List<GameObject>();
-	public int ObjTotal = 0;
+	public int ObjTotal = 100;
+
+	public Transform[] TsmArray = new Transform[100];
+	int TsmTotal = 0;
+
+	void TsmAdd(Transform tsm)
+	{
+		if (TsmTotal > TsmArray.Length-1)									// Check Array dimensions...
+			System.Array.Resize (ref TsmArray, TsmTotal<<2);			// if full just extend it
+
+		TsmArray[TsmTotal++]= tsm;			// check pos are inside array bounds
+	}
+
+	void TsmPop(int index)
+	{
+		TsmTotal--;
+		TsmArray[index]= TsmArray[TsmTotal];			// check pos are inside array bounds
+	}
 
 	public GameObject Player;
 	public Transform PlayerTransform;
 
-//	public bool Load(XmlNodeList Layer)
-//	{
-//		if ( ObjList == null)
-//			ObjList = new List<GameObject>();
-//
-//		foreach (XmlNode ObjGrp in Layer)
-//			StartCoroutine (BuildPrefabs (ObjGrp));
-//			
-////		ObjList = objectsList.ToArray();
-//		return true;
-//	}
-	
-//	public bool LoadObj(XmlNode Layer)
-//	{
-//		if ( ObjList == null)
-//			ObjList = new List<GameObject>();
-//		
-//		StartCoroutine (BuildPrefabs (Layer));
-//		
-//		return true;
-//	}
-	
 	public void Unload()
 	{
 		if ( ObjTotal <= 0)
 			return;
-		
+
+		TsmTotal = 0;
+		if ( TsmArray != null && TsmArray.Length > 0)
+			for ( int LayerIndex = TsmArray.Length - 1; LayerIndex >= 0 ; LayerIndex-- )
+				if ( TsmArray[LayerIndex] != null )
+					Destroy( TsmArray[LayerIndex].gameObject );
+		TsmArray = null;
+		System.Array.Resize (ref TsmArray, 100);
+
 		ObjTotal = 0;
 		ObjList.Clear ();
 //		ObjList = null;
@@ -73,9 +76,6 @@ public class ObjManager : MonoBehaviour
 		Transform GrpTransform = ObjGroup.transform;
 		GrpTransform.parent = Managers.Tiled.MapTransform;
 		
-		//if (ObjectsGroup.Attributes["type"] != null)
-		//    Debug.Log("Obj Null Type: "+ ObjectsGroup.Attributes["type"].Value);           // Get complete Obj Layer Props.
-		
 		foreach (XmlNode ObjInfo in ObjectsGroup.ChildNodes)
 		{
 			string ObjName;
@@ -92,6 +92,7 @@ public class ObjManager : MonoBehaviour
 				Transform ObjTransform = ((GameObject)Instantiate( Resources.Load( "Prefabs/" + ObjName , typeof(GameObject))) ).transform;
 
 				ObjList.Add( ObjTransform.gameObject );
+				TsmAdd(ObjTransform);
 
 				ObjTransform.position = new Vector3(
 					(float.Parse(ObjInfo.Attributes["x"].Value) / tilewidth) + (ObjTransform.localScale.x * .5f),        // X
@@ -107,7 +108,6 @@ public class ObjManager : MonoBehaviour
 					                                     -(ObjTransform.localScale.y * .5f + .5f), 
 					                                     Managers.Tiled.MapTransform.position.z );                // Model your own space!
 				}
-				
 				
 				ObjTransform.name = ObjName.Remove(0, ObjName.LastIndexOf("/") + 1);
 				ObjTransform.parent = GrpTransform;
@@ -209,12 +209,10 @@ public class ObjManager : MonoBehaviour
 					foreach (XmlNode ObjProp in ((XmlElement)ObjInfo).GetElementsByTagName("property") )
 					{
 						if (ObjProp.Attributes["name"].Value.ToLower() == "zoom" )
-							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).ZoomFactor = 
-								float.Parse(ObjProp.Attributes["value"].Value);
+							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).ZoomFactor = float.Parse(ObjProp.Attributes["value"].Value);
 						
 						if (ObjProp.Attributes["name"].Value.ToLower() == "offset" )
-							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).Offset = 
-								ReadVector( ObjProp.Attributes["value"].Value, 0);
+							((CameraBounds)ObjTransform.GetComponent<CameraBounds>()).Offset =  ReadVector( ObjProp.Attributes["value"].Value, 0);
 					}
 				}
 					break;
@@ -234,7 +232,6 @@ public class ObjManager : MonoBehaviour
 							ObjTransform.localScale = ReadVector(ObjProp.Attributes["value"].Value) ;
 							ObjTransform.localScale += Vector3.forward;
 						}
-						
 					}
 					break;
 				}
@@ -242,9 +239,13 @@ public class ObjManager : MonoBehaviour
 				#endregion
 								
 			}
-			else Debug.LogWarning("Object '" + ObjName + "' Was not found at: " + "Resources/Prefabs/");
+			else
+				Debug.LogWarning("Object '" + ObjName + "' Was not found at: " + "Resources/Prefabs/");
 
 			ObjTotal =  ObjList.Count;
+//			ObjList = objGrp.ToArray();
+//			ObjTotal = ObjList.Length;
+
 			yield return 0;
 		}
 	}
