@@ -33,7 +33,8 @@ namespace CustomAnimations
             switch (currentType)
             {
                 case AnimationType.Default:
-                    simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
+						simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
+
                     break;
             }
         }

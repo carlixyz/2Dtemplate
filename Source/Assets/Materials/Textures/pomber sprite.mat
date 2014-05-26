@@ -7,8 +7,9 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: pomber sprite
-  m_Shader: {fileID: 4800000, guid: bffb9d2f72dc6894a83b4e42dde9562d, type: 3}
-  m_ShaderKeywords: []
+  m_Shader: {fileID: 10753, guid: 0000000000000000e000000000000000, type: 0}
+  m_ShaderKeywords:
+  - PIXELSNAP_ON
   m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
@@ -17,8 +18,8 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 727acbf3a46e43740909d60ed6c83dca, type: 3}
-          m_Scale: {x: 1, y: 1}
+          m_Texture: {fileID: 2800000, guid: 6b1bd02359fb3a24594e08d86a404357, type: 3}
+          m_Scale: {x: 0, y: 0}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -36,16 +37,16 @@ Material:
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _Colors
+          name: _Detail
         second:
-          m_Texture: {fileID: 2800000, guid: 021fe8cea1128ad45a48d15a0d0804f3, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
-          name: _Detail
+          name: _Colors
         second:
-          m_Texture: {fileID: 0}
+          m_Texture: {fileID: 2800000, guid: 021fe8cea1128ad45a48d15a0d0804f3, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -83,12 +84,16 @@ Material:
         second: .850000024
       data:
         first:
+          name: PixelSnap
+        second: 1
+      data:
+        first:
           name: _Shininess
         second: .078125
       data:
         first:
           name: _KeyY
-        second: .0399999991
+        second: .300000012
       data:
         first:
           name: _SquashAmount
@@ -106,6 +111,10 @@ Material:
         first:
           name: _Color
         second: {r: 1, g: 1, b: 1, a: .992156863}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: .5, g: .5, b: .5, a: 1}
       data:
         first:
           name: _Scale

@@ -60,7 +60,7 @@ public class HomeState : GameState
 
 		if (Managers.Objects.Player)
         {
-			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
+//			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
         }
             //Managers.Game.PlayerPrefab.SetActive(false); 
@@ -96,7 +96,7 @@ public class HomeState : GameState
         //Time.timeScale = 1;
 		if (Managers.Objects.Player)
         {
-			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
+//			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
         //if (Managers.Game.PlayerPrefab)
@@ -427,7 +427,7 @@ public class HomeState : GameState
 
 		if (Managers.Objects.Player)
         {
-			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
+//			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = true;
             Managers.Game.IsPaused = false;
         }
 
@@ -463,7 +463,7 @@ public class HomeState : GameState
 
 
             //Managers.Game.IsPlaying = false;
-			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
+//			Managers.Objects.Player.GetComponent<PlayerControls>().enabled = false;
             Managers.Game.IsPaused = true;
  
         }

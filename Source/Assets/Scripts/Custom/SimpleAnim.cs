@@ -66,11 +66,11 @@ namespace CustomAnimations
                 switch (currentType)
                 {
                     case AnimationType.Default:
-                        simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
+				simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
                         break;
 
                     case AnimationType.Bird:
-                        simpleAnim.PlayFramesFixed(RowStart, ColumnStart, TotalFrames, Orientation);
+						simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
                         thisTransform.position += Vector3.up * Mathf.Sin(Time.time *3) * Time.deltaTime;
                         break;
                     case AnimationType.Fire:
@@ -81,42 +81,33 @@ namespace CustomAnimations
                         ////counter %= 1;
                         //counter = Mathf.Repeat(counter, 1);
 
-                        simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
+//                        simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
                         renderer.material.SetFloat("_KeyY", Managers.Display.PaletteSwap);
 
                         break;
 
                     case AnimationType.RaveLight:
-                        simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation, 30);
+//                        simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation, 30);
                         thisTransform.RotateAround(InitPos + Vector3.up, Vector3.forward, Mathf.Sin(Time.time ) );
                         break;
 
                     case AnimationType.RaveGaucho1:
                             thisTransform.position += Vector3.right * Mathf.Sin(Time.time * 3) * 2 * Time.deltaTime;
-                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, (int)-Mathf.Sign(Mathf.Sin(Time.time * 3)));
+//                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, (int)-Mathf.Sign(Mathf.Sin(Time.time * 3)));
                         break;
 
                     case AnimationType.RaveGaucho2:
                         if ( Mathf.Sin(Time.time ) > 0)
-                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, (int)Mathf.Sign(Mathf.Sin(Time.time * 3)), 9);
-                        else
-                            simpleAnim.PlayFrames(1, 0, 2, (int)Mathf.Sign(Mathf.Sin(Time.time * 5)), 9);
+						simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
+						
+//                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, (int)Mathf.Sign(Mathf.Sin(Time.time * 3)), 9);
+//                        else
+//                            simpleAnim.PlayFrames(1, 0, 2, (int)Mathf.Sign(Mathf.Sin(Time.time * 5)), 9);
 
                         break;
                     case AnimationType.MateGaucho:
-//                        if (Managers.Register.Treasure2)
-//                        {
-//                             GameObject Gaucho;
-//                             if (Random.Range(0, 100) > 50)
-//                                 Gaucho = (GameObject)Instantiate(Resources.Load("Prefabs/Gaucho", typeof(GameObject)),
-//                                     transform.position, transform.rotation);
-//                             else
-//                                 Gaucho = (GameObject)Instantiate(Resources.Load("Prefabs/GauchoFacon", typeof(GameObject)),
-//                                     transform.position, transform.rotation);
-//                             Destroy(gameObject);
-//                        }
-//                        else
-                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
+						simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
+
                         break;
 
                     case AnimationType.Kurupi:
@@ -128,9 +119,10 @@ namespace CustomAnimations
                                 Orientation = 1;
 
                         if (Mathf.Sin(Time.time) > 0)
-                            simpleAnim.PlayFrames(RowStart, ColumnStart, TotalFrames, Orientation);
-                        else
-                            simpleAnim.PlayFrames(RowStart, ColumnStart +1, TotalFrames, Orientation);
+							simpleAnim.PlayFramesDir(RowStart, TotalFrames, Orientation);
+
+//                        else
+//                            simpleAnim.PlayFrames(RowStart, ColumnStart +1, TotalFrames, Orientation);
 
 //                        if (Managers.Register.MboiTuiDefeated)
 //                            Destroy(thisTransform.gameObject);
