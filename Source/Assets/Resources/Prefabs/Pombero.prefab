@@ -88,7 +88,7 @@ MonoBehaviour:
   gravity: 20
   fallSpeed: .5
   walkSpeed: 1
-  runSpeed: 2
+  runSpeed: 5
   walkJump: 8
   runJump: 9
   Depth: .25

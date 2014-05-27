@@ -709,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073be04cbc894544ea0ffae4ad9da59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Congratulations: {fileID: 0}
+  Congratulations: {fileID: 8300000, guid: 82d84caef95ae85449a7cc8e065e0052, type: 3}
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjList: []
   ObjTotal: 100
-  ObjArray:
+  TsmArray:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
