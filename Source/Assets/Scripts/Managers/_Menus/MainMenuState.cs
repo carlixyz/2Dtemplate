@@ -37,9 +37,9 @@ public class MainMenuState : GameState
     public override void Init()
     {
 //        IntroPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/Intro/IntroPrefab", typeof(GameObject)) );
-		Managers.Display.CamTransform.position = new Vector3(3.75f, 2.5f, -2.5f);
+		Managers.Display.CamTransform.position = new Vector3(-3.75f, 2.5f, -2.5f);
 
-		BackPrefab = (GameObject)Instantiate(Background, Managers.Display.CamTransform.position, transform.rotation);			// Background Instantiation
+		BackPrefab = (GameObject)Instantiate(Background, Managers.Display.CamTransform.position + Vector3.forward * 5, transform.rotation);			// Background Instantiation
 		BackPrefab.transform.localScale = Vector3.one;
 
 		Vector2 BackSize = BackPrefab.GetComponent<SpriteRenderer> ().sprite.bounds.size;
@@ -124,7 +124,7 @@ public class MainMenuState : GameState
         else 
 			Debug.Log("MainMenuGUI : GUI skin object missing!");
 
-        GUI.color = new Color(1, 1, 1, 1);
+//        GUI.color = new Color(1, 1, 1, 1);
 
 //		if (Background)
 		//			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height), BackText);
@@ -164,16 +164,18 @@ public class MainMenuState : GameState
  
     public override void Pause()
     {
-		DeInit ();
+//		BackPrefab.SetActive (false);
+//		TitlePrefab.SetActive (false);
     }
 
     public override void Resume()
     {
-		Init ();
-        //DisplayMenu = true;
+		Managers.Display.CamTransform.position = new Vector3(-3.75f, 2.5f, -2.5f);
 
-//        Managers.Audio.StopMusic();
-
+		if (Opening && Managers.Audio.SoundEnable && MusicIntro)
+			Managers.Audio.PlayMusic(Opening, 1, 1);
+//		BackPrefab.SetActive (true);
+//		TitlePrefab.SetActive (true);
     }
   
 }

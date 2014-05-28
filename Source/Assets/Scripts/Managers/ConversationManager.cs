@@ -18,6 +18,7 @@ public class ConversationManager : MonoBehaviour {
 	
 	int miChatDirection = 0;														                    //  indicates the current Dialog's direction of Comic balloon 
 	int miCharIndex = 0;														                        //  indicates the current Dialog's char Index of script Rendering
+	int miChooseIndex = 0;
 	
 	List<cCharacterSpeaker> mSpeakers = new List<cCharacterSpeaker>();                                  // Characters talk able list
 	List<cConversation> mConversations = new List<cConversation>();		                                // Conversations list
@@ -311,18 +312,6 @@ public class ConversationManager : MonoBehaviour {
 	//////////////////////////////////////////////////////////////
 	
 
-	/// 
-
-	int miChooseIndex = 0;
-
-	
-	//						timer -= Time.deltaTime;
-	//						if (timer <= 0)  {
-	//							miCharIndex++;
-	//							timer = 2;
-	//						}
-	//						miCharIndex += (int)10 * Time.deltaTime ;
-
 	public void  Render (){
 		
 		if (mbConversationState && mpCurrentConversationNode != null )// Si Hay Conversación y el nodo no es NULL
@@ -396,23 +385,23 @@ public class ConversationManager : MonoBehaviour {
 							GUI.color = Color.magenta; 														//  GUI.color = Color(1, 0.36f, 0.22f, 1);
 					}
 
-					if( miChooseIndex == liOptionTotal || miChooseIndex > liOptionIndex )					// Traversed Options are lesser than total...
+					if( miChooseIndex == liOptionTotal || miChooseIndex > liOptionIndex )					// if Traversed Options are equal than total or lesser than current one...
 						GUI.Label( new Rect(ComicWord.xMin, (Screen.height * .15f) + liOptionIndex * 40, ComicWord.width , 200), lcpOptions.macText);// Character Speak	
 
-					else if ( miChooseIndex == liOptionIndex )
+					else if ( miChooseIndex == liOptionIndex )												// else do typeWriter machine FX ...
 						{
 							GUI.Label(new Rect(ComicWord.xMin, (Screen.height * .15f) + liOptionIndex * 40, ComicWord.width , 200), 
 							          (lcpOptions.macText).Remove(miCharIndex).ToString());	
 							
-							miCharIndex += System.Convert.ToByte(Time.frameCount % CharShowDelay == 0);			// Increment each 10 Secs of Frames (speed)
+							miCharIndex += System.Convert.ToByte(Time.frameCount % CharShowDelay == 0);		// Increment each 10 Secs of Frames (speed)
 							
-							if ( miCharIndex == lcpOptions.macText.Length-1)
+						if ( miCharIndex >= lcpOptions.macText.Length-1)									// Do it line by line
 							{
 								miCharIndex = 0;
 								miChooseIndex++;
 							}
 						}
-					///*///
+					///*///																					// else don't draw nothing
 				}
 				break;
 			}

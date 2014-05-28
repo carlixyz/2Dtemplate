@@ -25,15 +25,6 @@ private GameObject createdBoundaries;
 
 void  OnDrawGizmos ()
 {
-        //Gizmos.color        = sceneViewDisplayColor;
-
-        ////cameraBounds.center = transform.position + Vector3.down ;
-        //Gizmos.DrawLine(new Vector2(cameraBounds.xMin, cameraBounds.yMin), new Vector2(cameraBounds.xMax, cameraBounds.yMin));
-        //Gizmos.DrawLine(new Vector2(cameraBounds.xMin, cameraBounds.yMax), new Vector2(cameraBounds.xMax, cameraBounds.yMax) );
-        //Gizmos.DrawLine(new Vector2(cameraBounds.xMin, cameraBounds.yMin), new Vector2(cameraBounds.xMin, cameraBounds.yMax) );
-        //Gizmos.DrawLine(new Vector2(cameraBounds.xMax, cameraBounds.yMin), new Vector2(cameraBounds.xMax, cameraBounds.yMax));
-    
-
      if (ShowMapLimits)
      {
 	    Gizmos.color        = Color.blue;

@@ -92,6 +92,7 @@
      <Compile Include="Assets\Scripts\Managers\_States\HomeState.cs" />
      <Compile Include="Assets\Scripts\Managers\_States\InGameState.cs" />
      <Compile Include="Assets\Scripts\Managers\_States\InfoMenuState.cs" />
+     <Compile Include="Assets\Scripts\Managers\_States\Stage1State.cs" />
      <Compile Include="Assets\Scripts\Managers\_States\TrailerState.cs" />
      <Compile Include="Assets\Scripts\Managers\_States\WorldState0.cs" />
      <Compile Include="Assets\Scripts\camera\CameraBounds.cs" />

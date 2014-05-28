@@ -56,6 +56,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400006}
   - 114: {fileID: 11400004}
+  - 114: {fileID: 11400044}
   - 114: {fileID: 11400036}
   - 114: {fileID: 11400012}
   - 114: {fileID: 11400032}
@@ -544,12 +545,12 @@ MonoBehaviour:
   Title: {fileID: 100000, guid: 82c92e5c46e4b1b458da7357c88cab84, type: 2}
   TitleRect:
     serializedVersion: 2
-    x: 1.35000002
+    x: -6
     y: 3.0999999
     width: 1.5
     height: 1.5
   OptionsSet:
-  - {fileID: 11400036}
+  - {fileID: 11400044}
   - {fileID: 11400012}
   - {fileID: 11400024}
   OptionsRect:
@@ -641,6 +642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ae3c96d71ddc24aa00f4b60dc9c8a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CharShowDelay: 20
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -781,7 +783,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a208c58089bbada43bbf5596eaba7876, type: 3}
+  m_Script: {fileID: 11500000, guid: a37b03cad196a6b4eb76520b2d25450d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11400038
@@ -943,6 +945,51 @@ MonoBehaviour:
   eps: {x: 4.99999987e-06, y: 4.99999987e-06}
   CombineMesh: 1
   MapTransform: {fileID: 0}
+--- !u!114 &11400044
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a208c58089bbada43bbf5596eaba7876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelStates:
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  - {fileID: 11400036}
+  SpritesButtons:
+  - {fileID: 100000, guid: 9f1ae2c5b6c64d347994eb20b6416eb8, type: 2}
+  - {fileID: 100000, guid: c2b38c7542bed1344a2df87f87c74935, type: 2}
+  - {fileID: 100000, guid: 8fdd76828840bf642bf502da3df90691, type: 2}
+  - {fileID: 100000, guid: fe16d269bea0d2447b08e558736e92de, type: 2}
+  - {fileID: 100000, guid: 5706dab8bfb369f4283fe21e3b705ccc, type: 2}
+  - {fileID: 100000, guid: cfbfacf301f1e0946adc955b43cefc43, type: 2}
+  - {fileID: 100000, guid: b1caa2bce09024e41b27d81cd1f272c5, type: 2}
+  - {fileID: 100000, guid: 6413b5d79053ce14a92cdd36182f9dca, type: 2}
+  - {fileID: 100000, guid: 2f3ad1147fa1fb64194a6bea8a3486fa, type: 2}
+  - {fileID: 100000, guid: 1579160092efab846beb3a2158ba1091, type: 2}
+  BlockedButton: {fileID: 100000, guid: 30f9bbf3e6b164d4b86d798ea920b48e, type: 2}
+  TotalStages: 0
+  TotalRows: 3
+  TotalColumns: 4
+  Margin: 100
+  Offset: 1
+  Area:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  ShowMarginLimits: 0
 --- !u!114 &11400056
 MonoBehaviour:
   m_ObjectHideFlags: 1
