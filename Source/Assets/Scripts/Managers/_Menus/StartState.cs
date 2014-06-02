@@ -15,6 +15,7 @@ public class StartState : GameState
 
 	public float Margin = 50;
 	public float Offset = 0.1f;
+//	public Vector2D Offset = Vector2.one;
 
 	public Rect Area;
 	
@@ -27,6 +28,8 @@ public class StartState : GameState
 
 		Area = new Rect (upperLeft.x, upperLeft.y, lowerRight.x, lowerRight.y);
 		Offset = ((Area.width - Area.x) / TotalColumns) / 2;	// Offset entre piezas es igual a largo soga / total col (div. 2 para tener 1/2 margen)  
+//		Offset.y = ((Area.width - Area.x) / TotalColumns) / 2;	  
+//		Offset.x = ((Area.height - Area.y) / TotalRows) / 2;	 
 
 		for ( int y = 0, index = 0; y < TotalRows; y++) 
 		{		
@@ -43,6 +46,19 @@ public class StartState : GameState
 					            																			 Area.yMin + (y * Offset)), 
 				                                                                                 				Quaternion.identity))) );
 			}
+
+//			for (int x = 0; x < TotalColumns; x++, index++) 										// 
+//			{
+//				if ( index < TotalStages )
+//					StageList.Add ( new cStageNode ( LevelStates [index], ((GameObject) Instantiate( SpritesButtons[index],
+			//					                                                                                new Vector2( Area.xMin +  Offset.x + ( x * (2*Offset.x)),
+//					            																					Area.yMin + Offset.y + (y * (2*Offset.y))), 
+//					                                                                                				Quaternion.identity))) );
+//				else
+//					StageList.Add ( new cStageNode ( null, ((GameObject) Instantiate( BlockedButton, new Vector2( Area.xMin +  Offset.x + ( x * (2*Offset.x)),
+				//					            																	Area.yMin + Offset.y + (y * (2*Offset.y))), 
+				//					                                                                 				Quaternion.identity))) );
+//			}
 		}
     }
 

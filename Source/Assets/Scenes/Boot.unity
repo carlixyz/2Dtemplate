@@ -298,6 +298,7 @@ MonoBehaviour:
   TotalColumns: 4
   Margin: 100
   Offset: 1
+  OffsetY: .100000001
   Area:
     serializedVersion: 2
     x: 0
